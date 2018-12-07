@@ -1,0 +1,45 @@
+sudo: false
+language: java
+jdk:
+  - oraclejdk8
+cache:
+  directories:
+  - $HOME/.m2
+#
+# Load GPG secrets and make mvnw executable
+#
+before_install:
+  - chmod +x mvnw
+#
+# Skip installation
+#
+install: true
+#
+# Verify
+#
+script: "./mvnw --settings .travis/settings.xml clean verify -T4"
+#
+# Coveralls
+#
+after_success:
+- bash <(curl -s https://codecov.io/bash)
+
+#
+# Deploy of artifacts is only triggered on master branch.
+#
+before_deploy:
+  - echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import
+  - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
+
+deploy:
+  skip_cleanup: true
+  provider: script
+  script: "./mvnw --settings .travis/settings.xml deploy -DskipTests=true -B -U -V -Prelease"
+  on:
+    branch: master
+
+#
+# Notify slack channel
+#
+#notifications:
+#  slack: holunda:OBhk0v6b16pLFphCq3siuDIZ
