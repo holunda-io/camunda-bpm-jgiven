@@ -55,7 +55,7 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.camunda.bpm.extension</groupId>
+      <groupId>io.holunda.testing</groupId>
       <artifactId>camunda-bpm-assert</artifactId>
       <scope>test</scope>
     </dependency>
