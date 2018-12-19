@@ -9,7 +9,7 @@
   <packaging>pom</packaging>
 
 
-  <name>camunda-bpm-jgiven</name>
+  <name>Camunda BPM JGiven</name>
   <description>Camunda BPM JGiven</description>
   <url>https://github.com/holunda-io/camunda-bpm-jgiven/</url>
 
