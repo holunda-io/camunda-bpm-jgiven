@@ -88,16 +88,13 @@ open class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : 
     return self()
   }
 
-  /*
-
-  Only available with assertJ 3.9.0
   @As("variables $ are not present")
   open fun variable_is_not_present(@QuotedVarargs vararg variableName: String): SELF {
-    assertThat(processInstanceSupplier.get()).`as`("variable $variableName should not be present").variables().doesNotContainKeys(*variableName)
+    assertThat(processInstanceSupplier.get())
+      .`as`("variable $variableName should not be present")
+      .variables().doesNotContainKeys(*variableName)
     return self()
   }
-
-  */
 
   open fun no_job_is_executed(): SELF {
     // empty

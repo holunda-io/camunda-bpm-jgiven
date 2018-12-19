@@ -5,22 +5,22 @@
 
   <groupId>io.holunda.testing</groupId>
   <artifactId>camunda-bpm-jgiven-root</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>0.0.1</version>
   <packaging>pom</packaging>
+
+
+  <name>Camunda BPM JGiven</name>
+  <description>Camunda BPM JGiven</description>
+  <url>https://github.com/holunda-io/camunda-bpm-jgiven/</url>
+
 
   <properties>
     <camunda.version>7.10.0</camunda.version>
     <jgiven.version>0.17.0</jgiven.version>
     <junit.version>4.12</junit.version>
     <!-- switch to this, as soon as new camunda-bpm-assert version is released -->
-    <!--
     <assertj.version>3.9.0</assertj.version>
-    <camunda-bpm-assert.version>2.0-alpha2</camunda-bpm-assert.version>
-    -->
-    <assertj.version>1.7.1</assertj.version>
-    <camunda-bpm-assert.version>2.0-alpha2</camunda-bpm-assert.version>
-
-
+    <camunda-bpm-assert.version>2.0</camunda-bpm-assert.version>
     <java.version>1.8</java.version>
     <kotlin.version>1.3.11</kotlin.version>
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
@@ -65,7 +65,7 @@
         <version>${camunda.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.camunda.bpm.extension</groupId>
+        <groupId>io.holunda.testing</groupId>
         <artifactId>camunda-bpm-assert</artifactId>
         <version>${camunda-bpm-assert.version}</version>
       </dependency>
@@ -184,6 +184,7 @@
         </plugin>
 
         <plugin>
+          <!-- git flow -->
           <groupId>com.amashchenko.maven.plugin</groupId>
           <artifactId>gitflow-maven-plugin</artifactId>
           <version>1.10.0</version>
@@ -252,8 +253,8 @@
           </dependencies>
         </plugin>
 
-        <!-- JGiven Reports -->
         <plugin>
+          <!-- JGiven Reports -->
           <groupId>com.tngtech.jgiven</groupId>
           <artifactId>jgiven-maven-plugin</artifactId>
           <version>${jgiven.version}</version>
@@ -268,6 +269,85 @@
             <format>html</format>
           </configuration>
         </plugin>
+
+        <plugin>
+          <!-- javadoc for kotlin -->
+          <groupId>org.jetbrains.dokka</groupId>
+          <artifactId>dokka-maven-plugin</artifactId>
+          <version>0.9.13</version>
+          <executions>
+            <execution>
+              <phase>test</phase>
+              <id>attach-javadocs</id>
+              <goals>
+                <goal>javadocJar</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
+        <plugin>
+          <!-- source from kotlin -->
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <version>3.0.0</version>
+          <executions>
+            <execution>
+              <phase>generate-sources</phase>
+              <goals>
+                <goal>add-source</goal>
+              </goals>
+              <configuration>
+                <sources>
+                  <source>${project.basedir}/src/main/kotlin</source>
+                </sources>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+
+        <plugin>
+          <!-- attach sources -->
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>3.0.1</version>
+          <executions>
+            <execution>
+              <id>attach-sources</id>
+              <phase>package</phase>
+              <goals>
+                <goal>jar</goal>
+              </goals>
+              <configuration>
+                <attach>true</attach>
+                <forceCreation>true</forceCreation>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+
+        <plugin>
+          <!-- To sign the artifacts -->
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-gpg-plugin</artifactId>
+          <version>1.6</version>
+          <executions>
+            <execution>
+              <id>sign-artifacts</id>
+              <phase>verify</phase>
+              <goals>
+                <goal>sign</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
+        <plugin>
+          <!-- Deploy -->
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>2.8.2</version>
+        </plugin>
+
       </plugins>
     </pluginManagement>
 
@@ -278,5 +358,93 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <!--
+    Profile creating all artifacts: JARs, POMs, Sources, JavaDoc and all signatures.
+    -->
+    <profile>
+      <id>release</id>
+      <activation>
+        <property>
+          <name>release</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.jetbrains.dokka</groupId>
+            <artifactId>dokka-maven-plugin</artifactId>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+  </profiles>
+
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <scm>
+    <connection>scm:git:git@github.com:holunda-io/camunda-bpm-jgiven.git</connection>
+    <url>scm:git:git@github.com:holunda-io/camunda-bpm-jgiven.git</url>
+    <developerConnection>scm:git:git@github.com:holunda-io/camunda-bpm-jgiven.git</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
+
+  <distributionManagement>
+    <site>
+      <id>README</id>
+      <url>https://github.com/holunda-io/camunda-bpm-jgiven</url>
+    </site>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+  </distributionManagement>
+
+  <pluginRepositories>
+    <!-- required for Dokka (Kotlin javadoc) -->
+    <pluginRepository>
+      <id>jcenter</id>
+      <name>JCenter</name>
+      <url>https://jcenter.bintray.com/</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+    </pluginRepository>
+  </pluginRepositories>
+
+  <developers>
+    <developer>
+      <id>zambrovski</id>
+      <name>Simon Zambrovski</name>
+      <email>simon.zambrovski@holisticon.de</email>
+      <organization>Holisticon AG</organization>
+      <organizationUrl>http://www.holisticon.de</organizationUrl>
+    </developer>
+  </developers>
+
 
 </project>
