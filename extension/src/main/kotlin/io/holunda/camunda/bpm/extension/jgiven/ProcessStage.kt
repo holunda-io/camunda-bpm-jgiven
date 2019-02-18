@@ -102,12 +102,14 @@ open class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : 
   }
 
   open fun job_is_executed(): SELF {
+    assertThat(processInstanceSupplier.get()).isNotNull
     execute(job())
     return self()
   }
 
   @As("process continues")
   open fun process_continues(): SELF {
+    assertThat(processInstanceSupplier.get()).isNotNull
     execute(job())
     return self()
   }
