@@ -32,7 +32,7 @@ open class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : 
   lateinit var processInstanceSupplier: PROCESS_BEAN
 
   @As("process waits in $")
-  open fun process_waits_in(activityId: String): SELF {
+  open fun process_waits_in(@Quoted activityId: String): SELF {
     assertThat(processInstanceSupplier.get()).isWaitingAt(activityId)
     return self()
   }
