@@ -11,6 +11,7 @@ import org.camunda.bpm.engine.runtime.ProcessInstance
 import org.camunda.bpm.engine.test.ProcessEngineRule
 import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareAssertions.assertThat
 import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*
+import java.time.Period
 import java.util.*
 import java.util.function.Supplier
 
@@ -32,7 +33,7 @@ open class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : 
   lateinit var processInstanceSupplier: PROCESS_BEAN
 
   @As("process waits in $")
-  open fun process_waits_in(activityId: String): SELF {
+  open fun process_waits_in(@Quoted activityId: String): SELF {
     assertThat(processInstanceSupplier.get()).isWaitingAt(activityId)
     return self()
   }
@@ -81,6 +82,12 @@ open class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : 
     return self()
   }
 
+  @As("task's follow-up date is $ after its creation")
+  open fun task_has_follow_up_date_after(followUpDatePeriod: Period): SELF {
+    assertThat(task().followUpDate).isInSameSecondWindowAs(Date.from(task().createTime.toInstant().plus(followUpDatePeriod)))
+    return self()
+  }
+
   @As("variable \$variableName is set to \$value")
   open fun variable_is_set(@Quoted variableName: String, @Quoted value: Any): SELF {
     assertThat(processInstanceSupplier.get()).hasVariables(variableName)
@@ -96,18 +103,38 @@ open class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : 
     return self()
   }
 
+  /**
+   * Completes a task with variables and continues if the task is marked as async-after.
+   * @param variables optional map with variables
+   * @param continueIfAsync if <code>true</code> expects that the task is marked as async-after and continues the execution
+   * after completion. Defaults to <code>false</code>.
+   */
+  open fun task_is_completed_with_variables(variables: Map<String, Any> = mapOf(), continueIfAsync: Boolean = false): SELF {
+    val taskDefinitionKey = task().taskDefinitionKey
+    taskService().complete(task().id, variables)
+    if (continueIfAsync) {
+      assertThat(processInstanceSupplier.get())
+        .`as`("Expecting the task to be marked as async after and continue on complete.")
+        .isWaitingAt(taskDefinitionKey)
+      execute(job())
+    }
+    return self()
+  }
+
   open fun no_job_is_executed(): SELF {
     // empty
     return self()
   }
 
   open fun job_is_executed(): SELF {
+    assertThat(processInstanceSupplier.get()).isNotNull
     execute(job())
     return self()
   }
 
   @As("process continues")
   open fun process_continues(): SELF {
+    assertThat(processInstanceSupplier.get()).isNotNull
     execute(job())
     return self()
   }
