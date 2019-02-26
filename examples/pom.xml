@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.testing</groupId>
     <artifactId>camunda-bpm-jgiven-root</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3-SNAPSHOT</version>
   </parent>
 
   <artifactId>camunda-bpm-jgiven-examples</artifactId>
