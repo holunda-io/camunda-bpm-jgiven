@@ -7,6 +7,8 @@ import io.holunda.testing.examples.basic.ApprovalProcessBean.Elements
 import io.holunda.testing.examples.basic.ApprovalProcessBean.Expressions
 import org.camunda.bpm.engine.test.Deployment
 import org.camunda.bpm.engine.test.ProcessEngineRule
+import org.camunda.bpm.engine.variable.Variables.createVariables
+import org.camunda.bpm.engine.variable.Variables.putValue
 import org.camunda.bpm.extension.process_test_coverage.junit.rules.TestCoverageProcessEngineRuleBuilder
 import org.camunda.bpm.spring.boot.starter.test.helper.StandaloneInMemoryTestConfiguration
 import org.junit.ClassRule
@@ -98,6 +100,64 @@ open class ApprovalProcessTest : ScenarioTest<ApprovalProcessActionStage, Approv
       .process_is_finished()
       .and()
       .process_has_passed(Elements.SERVICE_AUTO_APPROVE, Elements.END_REJECTED)
+
+  }
+
+  @Test
+  fun `should manually reject`() {
+
+    val approvalRequestId = UUID.randomUUID().toString()
+
+    given()
+      .process_is_deployed(ApprovalProcessBean.KEY)
+      .and()
+      .process_is_started_for_request(approvalRequestId)
+      .and()
+      .approval_strategy_can_be_applied(Expressions.ApprovalStrategy.MANUAL)
+      .and()
+      .process_continues()
+      .and()
+      .process_waits_in(Elements.USER_APPROVE_REQUEST)
+
+    whenever()
+      .task_is_completed_with_variables(
+        putValue(ApprovalProcessBean.Variables.APPROVAL_DECISION, Expressions.ApprovalDecision.REJECT),
+        continueIfAsync = true
+      )
+
+    then()
+      .process_is_finished()
+      .and()
+      .process_has_passed(Elements.END_REJECTED)
+
+  }
+
+  @Test
+  fun `should manually approve`() {
+
+    val approvalRequestId = UUID.randomUUID().toString()
+
+    given()
+      .process_is_deployed(ApprovalProcessBean.KEY)
+      .and()
+      .process_is_started_for_request(approvalRequestId)
+      .and()
+      .approval_strategy_can_be_applied(Expressions.ApprovalStrategy.MANUAL)
+      .and()
+      .process_continues()
+      .and()
+      .process_waits_in(Elements.USER_APPROVE_REQUEST)
+
+    whenever()
+      .task_is_completed_with_variables(
+        putValue(ApprovalProcessBean.Variables.APPROVAL_DECISION, Expressions.ApprovalDecision.APPROVE),
+        continueIfAsync = true
+      )
+
+    then()
+      .process_is_finished()
+      .and()
+      .process_has_passed(Elements.END_APPROVED)
 
   }
 
