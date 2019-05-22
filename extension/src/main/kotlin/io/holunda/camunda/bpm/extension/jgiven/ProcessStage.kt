@@ -20,6 +20,12 @@ import java.util.function.Supplier
  */
 fun <G, W, T> ScenarioTestBase<G, W, T>.whenever() = `when`()
 
+
+/**
+ * Annotation to mark jgiven process stages in order to make them open by all-open compiler plugin.
+ */
+annotation class JGivenProcessStage
+
 /**
  * Process stage contains some basic methods to operate with process engine.
  * @param <SELF> sub-type of the ProcessStage. Will be returned from <code>self()</code> to maintain fluent API.
