@@ -7,7 +7,6 @@ import io.holunda.testing.examples.basic.ApprovalProcessBean.Elements
 import io.holunda.testing.examples.basic.ApprovalProcessBean.Expressions
 import org.camunda.bpm.engine.test.Deployment
 import org.camunda.bpm.engine.test.ProcessEngineRule
-import org.camunda.bpm.engine.variable.Variables.createVariables
 import org.camunda.bpm.engine.variable.Variables.putValue
 import org.camunda.bpm.extension.process_test_coverage.junit.rules.TestCoverageProcessEngineRuleBuilder
 import org.camunda.bpm.spring.boot.starter.test.helper.StandaloneInMemoryTestConfiguration
@@ -118,6 +117,8 @@ open class ApprovalProcessTest : ScenarioTest<ApprovalProcessActionStage, Approv
       .process_continues()
       .and()
       .process_waits_in(Elements.USER_APPROVE_REQUEST)
+      .and()
+      .task_priority_is_between(10, 30)
 
     whenever()
       .task_is_completed_with_variables(

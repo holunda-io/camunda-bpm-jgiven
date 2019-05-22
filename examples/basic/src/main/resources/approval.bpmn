@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1nzmi6w" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="2.0.3">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1nzmi6w" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="2.2.4">
   <bpmn:process id="approval" name="Approval" isExecutable="true">
     <bpmn:startEvent id="start" name="Approval&#10;started" camunda:asyncAfter="true">
       <bpmn:outgoing>flow1</bpmn:outgoing>
@@ -74,7 +74,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_0kbwukz" name="RETURN&#10;" sourceRef="ExclusiveGateway_0aekkob" targetRef="user_amend_request">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${approvalDecision == "RETURN"}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:userTask id="user_amend_request" name="Amend&#10;request" camunda:asyncAfter="true" camunda:assignee="${originator}" camunda:dueDate="P2D" camunda:priority="100">
+    <bpmn:userTask id="user_amend_request" name="Amend&#10;request" camunda:asyncAfter="true" camunda:assignee="${originator}" camunda:dueDate="P2D" camunda:priority="74">
       <bpmn:incoming>SequenceFlow_0kbwukz</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1wcuegh</bpmn:outgoing>
     </bpmn:userTask>

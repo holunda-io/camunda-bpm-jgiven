@@ -19,6 +19,18 @@ import java.util.function.Supplier
  * Alias for the when
  */
 fun <G, W, T> ScenarioTestBase<G, W, T>.whenever() = `when`()
+/**
+ * Alias for the when
+ */
+fun <G, W, T> ScenarioTestBase<G, W, T>.WHEN() = `when`()
+/**
+ * Alias for the given
+ */
+fun <G, W, T> ScenarioTestBase<G, W, T>.GIVEN() = given()
+/**
+ * Alias for the then
+ */
+fun <G, W, T> ScenarioTestBase<G, W, T>.THEN() = then()
 
 
 /**
@@ -30,7 +42,8 @@ annotation class JGivenProcessStage
  * Process stage contains some basic methods to operate with process engine.
  * @param <SELF> sub-type of the ProcessStage. Will be returned from <code>self()</code> to maintain fluent API.
  */
-open class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Supplier<ProcessInstance>> : Stage<SELF>() {
+@JGivenProcessStage
+class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Supplier<ProcessInstance>> : Stage<SELF>() {
 
   @ExpectedScenarioState(required = true)
   lateinit var camunda: ProcessEngineRule
@@ -39,13 +52,13 @@ open class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : 
   lateinit var processInstanceSupplier: PROCESS_BEAN
 
   @As("process waits in $")
-  open fun process_waits_in(@Quoted activityId: String): SELF {
+  fun process_waits_in(@Quoted activityId: String): SELF {
     assertThat(processInstanceSupplier.get()).isWaitingAt(activityId)
     return self()
   }
 
   @As("process $ is deployed")
-  open fun process_is_deployed(@Quoted processDefinitionKey: String): SELF {
+  fun process_is_deployed(@Quoted processDefinitionKey: String): SELF {
     assertThat(camunda.repositoryService
       .createProcessDefinitionQuery()
       .processDefinitionKey(processDefinitionKey)
@@ -54,79 +67,96 @@ open class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : 
     return self()
   }
 
-  open fun process_is_finished(): SELF {
+  fun process_is_finished(): SELF {
     assertThat(processInstanceSupplier.get()).isEnded
     return self()
   }
 
-  open fun task_is_assigned_to_user(@Quoted user: String): SELF {
+  fun task_is_assigned_to_user(@Quoted user: String): SELF {
     assertThat(task()).isAssignedTo(user)
     return self()
   }
 
-  open fun task_is_visible_to_users(@QuotedVarargs users: Array<String>): SELF {
+  fun task_is_visible_to_users(@QuotedVarargs users: Array<String>): SELF {
     val task = task()
     Arrays.stream(users).forEach { user -> assertThat(task).hasCandidateUser(user) }
     return self()
   }
 
-  open fun task_is_visible_to_groups(@QuotedVarargs groups: Array<String>): SELF {
+  fun task_is_visible_to_groups(@QuotedVarargs groups: Array<String>): SELF {
     val task = task()
     Arrays.stream(groups).forEach { group -> assertThat(task).hasCandidateGroup(group) }
     return self()
   }
 
   @As("process has passed element(s) $")
-  open fun process_has_passed(@QuotedVarargs vararg elements: String): SELF {
+  fun process_has_passed(@QuotedVarargs vararg elements: String): SELF {
     assertThat(processInstanceSupplier.get()).hasPassedInOrder(*elements)
     return self()
   }
 
   @As("process has not passed element(s) $")
-  open fun process_has_not_passed(@QuotedVarargs vararg elements: String): SELF {
+  fun process_has_not_passed(@QuotedVarargs vararg elements: String): SELF {
     assertThat(processInstanceSupplier.get()).hasNotPassed(*elements)
     return self()
   }
 
   @As("task's follow-up date is $ after its creation")
-  open fun task_has_follow_up_date_after(followUpDatePeriod: Period): SELF {
+  fun task_has_follow_up_date_after(followUpDatePeriod: Period): SELF {
     assertThat(task().followUpDate).isInSameSecondWindowAs(Date.from(task().createTime.toInstant().plus(followUpDatePeriod)))
     return self()
   }
 
   @As("task's priority is $")
-  open fun task_has_priority(priority: Int): SELF {
-    assertThat(task().priority).isEqualTo(priority)
+  fun task_has_priority(priority: Int): SELF {
+    assertThat(task().priority)
+      .`as`("Expecting task priority to be %d, but it was %d.", priority, task().priority)
+      .isEqualTo(priority)
     return self()
   }
 
   @As("task's priority is not $")
-  open fun task_has_priority_other_than(priority: Int): SELF {
-    assertThat(task().priority).isNotEqualTo(priority)
+  fun task_has_priority_other_than(priority: Int): SELF {
+    assertThat(task().priority)
+      .`as`("Expecting task priority to not equal to %d, but it was %d.", priority, task().priority)
+      .isNotEqualTo(priority)
     return self()
   }
 
   @As("task's priority is greater than $")
-  open fun task_has_priority_larger_than(priority: Int): SELF {
-    assertThat(task().priority).isGreaterThan(priority)
+  fun task_has_priority_greater_than(priority: Int): SELF {
+    assertThat(task().priority)
+      .`as`("Expecting task priority to be greater than %d, but it was %d.", priority, task().priority)
+      .isGreaterThan(priority)
     return self()
   }
 
   @As("task's priority is less than $")
-  open fun task_has_priority_less_than(priority: Int): SELF {
-    assertThat(task().priority).isLessThan(priority)
+  fun task_has_priority_less_than(priority: Int): SELF {
+    assertThat(task().priority)
+      .`as`("Expecting task priority to be less than %d, but it was %d.", priority, task().priority)
+      .isLessThan(priority)
     return self()
   }
 
+  @As("task's priority is between \$lower \$upper")
+  fun task_priority_is_between(lower: Int = 0, upper: Int = 100): SELF {
+    assertThat(task().priority)
+      .`as`("Expecting task priority to be between %d and %d, but it was %d.", lower, upper, task().priority)
+      .isBetween(lower, upper)
+    return self()
+  }
+
+
   @As("variable \$variableName is set to \$value")
-  open fun variable_is_set(@Quoted variableName: String, @Quoted value: Any): SELF {
+  fun variable_is_set(@Quoted variableName: String, @Quoted value: Any): SELF {
     assertThat(processInstanceSupplier.get()).hasVariables(variableName)
     assertThat(processInstanceSupplier.get()).variables().containsEntry(variableName, value)
     return self()
   }
 
   @As("variables $ are not present")
-  open fun variable_is_not_present(@QuotedVarargs vararg variableName: String): SELF {
+  fun variable_is_not_present(@QuotedVarargs vararg variableName: String): SELF {
     assertThat(processInstanceSupplier.get())
       .`as`("variable $variableName should not be present")
       .variables().doesNotContainKeys(*variableName)
@@ -139,7 +169,7 @@ open class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : 
    * @param continueIfAsync if <code>true</code> expects that the task is marked as async-after and continues the execution
    * after completion. Defaults to <code>false</code>.
    */
-  open fun task_is_completed_with_variables(variables: Map<String, Any> = mapOf(), continueIfAsync: Boolean = false): SELF {
+  fun task_is_completed_with_variables(variables: Map<String, Any> = mapOf(), continueIfAsync: Boolean = false): SELF {
     val taskDefinitionKey = task().taskDefinitionKey
     taskService().complete(task().id, variables)
     if (continueIfAsync) {
@@ -151,19 +181,19 @@ open class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : 
     return self()
   }
 
-  open fun no_job_is_executed(): SELF {
+  fun no_job_is_executed(): SELF {
     // empty
     return self()
   }
 
-  open fun job_is_executed(): SELF {
+  fun job_is_executed(): SELF {
     assertThat(processInstanceSupplier.get()).isNotNull
     execute(job())
     return self()
   }
 
   @As("process continues")
-  open fun process_continues(): SELF {
+  fun process_continues(): SELF {
     assertThat(processInstanceSupplier.get()).isNotNull
     execute(job())
     return self()
