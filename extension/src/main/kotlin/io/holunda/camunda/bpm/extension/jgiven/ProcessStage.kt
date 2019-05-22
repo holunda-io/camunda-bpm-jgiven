@@ -88,6 +88,18 @@ open class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : 
     return self()
   }
 
+  @As("task's priority is $")
+  open fun task_has_priority(priority: Int): SELF {
+    assertThat(task().priority).isEqualTo(priority)
+    return self()
+  }
+
+  @As("task's priority is not $")
+  open fun task_has_priority_other_than(priority: Int): SELF {
+    assertThat(task().priority).isNotEqualTo(priority)
+    return self()
+  }
+
   @As("variable \$variableName is set to \$value")
   open fun variable_is_set(@Quoted variableName: String, @Quoted value: Any): SELF {
     assertThat(processInstanceSupplier.get()).hasVariables(variableName)
