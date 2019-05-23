@@ -4,7 +4,7 @@
 
   <groupId>io.holunda.testing</groupId>
   <artifactId>camunda-bpm-jgiven-root</artifactId>
-  <version>0.0.3</version>
+  <version>0.0.4-SNAPSHOT</version>
   <packaging>pom</packaging>
 
 
@@ -412,7 +412,7 @@
     <connection>scm:git:git@github.com:holunda-io/camunda-bpm-jgiven.git</connection>
     <url>scm:git:git@github.com:holunda-io/camunda-bpm-jgiven.git</url>
     <developerConnection>scm:git:git@github.com:holunda-io/camunda-bpm-jgiven.git</developerConnection>
-    <tag>camunda-bpm-jgiven-root-0.0.3</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <distributionManagement>
