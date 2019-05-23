@@ -112,8 +112,22 @@ We use gitflow for development. If you want to contribute, start and create
 an issue. Then fork the repository, create a feature branch and provide a 
 pull-request against `develop`.
 
+If you have permissions to release, make sure all branches are fetched and run: 
+
+     ./mvnw release:prepare release:perform
+     
+from cli. This will update the poms of `develop` and `master` branches.
+If you want to publish to central and have sufficient permissions, run
+
+     ./mvnw clean deploy -Prelease
+     
+on `master` branch. Don't forget to close and release repository on https://oss.sonatype.org/#stagingRepositories.
+
+
 ### Current maintainers
 
 * [Simon Zambrovski](https://github.com/zambrovski)
 * [Jan Galinski](https://github.com/jangalinski)
+* [Andre Hegerath](https://github.com/a-hegerath)
+
 
