@@ -209,6 +209,19 @@
           <artifactId>kotlin-maven-plugin</artifactId>
           <groupId>org.jetbrains.kotlin</groupId>
           <version>${kotlin.version}</version>
+          <configuration>
+            <compilerPlugins>
+              <plugin>spring</plugin>
+              <plugin>jpa</plugin>
+              <plugin>no-arg</plugin>
+              <plugin>all-open</plugin>
+            </compilerPlugins>
+            <pluginOptions>
+              <!-- Each annotation is placed on its own line -->
+              <option>all-open:annotation=io.holunda.camunda.bpm.extension.jgiven.JGivenProcessStage</option>
+            </pluginOptions>
+            <jvmTarget>${java.version}</jvmTarget>
+          </configuration>
           <executions>
             <execution>
               <id>compile</id>
@@ -216,12 +229,6 @@
                 <goal>compile</goal>
               </goals>
               <configuration>
-                <compilerPlugins>
-                  <plugin>spring</plugin>
-                  <plugin>jpa</plugin>
-                  <plugin>no-arg</plugin>
-                </compilerPlugins>
-                <jvmTarget>${java.version}</jvmTarget>
                 <sourceDirs>
                   <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
                 </sourceDirs>

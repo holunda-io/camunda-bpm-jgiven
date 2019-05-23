@@ -127,6 +127,7 @@ on `master` branch. Don't forget to close and release repository on https://oss.
 ### Current maintainers
 
 * [Simon Zambrovski](https://github.com/zambrovski)
+* [Simon Sprünker](https://github.com/srsp)
 * [Jan Galinski](https://github.com/jangalinski)
 * [Andre Hegerath](https://github.com/a-hegerath)
 
