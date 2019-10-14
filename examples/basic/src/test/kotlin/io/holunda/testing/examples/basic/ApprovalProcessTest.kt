@@ -8,9 +8,7 @@ import io.holunda.testing.examples.basic.ApprovalProcessBean.Expressions
 import org.camunda.bpm.engine.test.Deployment
 import org.camunda.bpm.engine.test.ProcessEngineRule
 import org.camunda.bpm.engine.variable.Variables.putValue
-import org.camunda.bpm.extension.process_test_coverage.junit.rules.TestCoverageProcessEngineRuleBuilder
 import org.camunda.bpm.spring.boot.starter.test.helper.StandaloneInMemoryTestConfiguration
-import org.junit.ClassRule
 import org.junit.Rule
 import org.junit.Test
 import java.util.*
@@ -20,12 +18,7 @@ import java.util.*
 open class ApprovalProcessTest : ScenarioTest<ApprovalProcessActionStage, ApprovalProcessActionStage, ApprovalProcessThenStage>() {
 
   companion object {
-
     val processEngineRule = StandaloneInMemoryTestConfiguration().rule()
-
-    @get: Rule
-    @get: ClassRule
-    var rule: ProcessEngineRule = TestCoverageProcessEngineRuleBuilder.create(processEngineRule.processEngine).build()
   }
 
   @get: Rule
@@ -161,5 +154,4 @@ open class ApprovalProcessTest : ScenarioTest<ApprovalProcessActionStage, Approv
       .process_has_passed(Elements.END_APPROVED)
 
   }
-
 }
