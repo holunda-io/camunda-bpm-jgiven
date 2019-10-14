@@ -7,9 +7,9 @@ import com.tngtech.jgiven.annotation.Quoted
 import com.tngtech.jgiven.annotation.ScenarioState
 import com.tngtech.jgiven.base.ScenarioTestBase
 import io.holunda.camunda.bpm.extension.jgiven.formatter.QuotedVarargs
+import org.assertj.core.api.Assertions.*
 import org.camunda.bpm.engine.runtime.ProcessInstance
 import org.camunda.bpm.engine.test.ProcessEngineRule
-import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareAssertions.assertThat
 import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*
 import java.time.Period
 import java.util.*

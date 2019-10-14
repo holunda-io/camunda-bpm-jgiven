@@ -8,7 +8,7 @@ import io.holunda.testing.examples.basic.ApprovalProcessBean.Expressions.DETERMI
 import io.holunda.testing.examples.basic.ApprovalProcessBean.Expressions.LOAD_APPROVAL_REQUEST
 import io.holunda.testing.examples.basic.ApprovalProcessBean.Variables.APPROVAL_DECISION
 import io.holunda.testing.examples.basic.ApprovalProcessBean.Variables.APPROVAL_STRATEGY
-import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareAssertions.assertThat
+import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.assertThat
 import org.camunda.bpm.engine.variable.Variables
 import org.camunda.bpm.extension.mockito.CamundaMockito.getJavaDelegateMock
 import org.camunda.bpm.extension.mockito.CamundaMockito.registerJavaDelegateMock

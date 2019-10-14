@@ -29,7 +29,7 @@ Add the following dependency to your Maven pom:
     <dependency>
       <groupId>io.holunda.testing</groupId>
       <artifactId>camunda-bpm-jgiven</artifactId>
-      <version>0.0.4</version>
+      <version>0.0.5</version>
       <scope>test</scope>
     </dependency>
 
@@ -99,7 +99,6 @@ The resulting report:
 ![JGiven Process Report](docs/report.png)
 
 
-
 Interested? Check out the examples.
 
 ## License
@@ -114,7 +113,8 @@ pull-request against `develop`.
 
 If you have permissions to release, make sure all branches are fetched and run: 
 
-     ./mvnw gitflow:release-start gitflow:release-finish
+     ./mvnw gitflow:release-start 
+     ./mvnw gitflow:release-finish
      
 from cli. This will update the poms of `develop` and `master` branches.
 If you want to publish to central and have sufficient permissions, run
