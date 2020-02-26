@@ -1,0 +1,887 @@
+{
+  "className": "io.holunda.testing.examples.basic.ApprovalProcessTest",
+  "name": "Approval Process",
+  "scenarios": [
+    {
+      "className": "io.holunda.testing.examples.basic.ApprovalProcessTest",
+      "testMethodName": "should start asynchronously",
+      "description": "should start asynchronously",
+      "tagIds": [],
+      "explicitParameters": [],
+      "derivedParameters": [],
+      "casesAsTable": false,
+      "scenarioCases": [
+        {
+          "caseNr": 1,
+          "steps": [
+            {
+              "name": "process $ is deployed",
+              "words": [
+                {
+                  "value": "Given",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "process"
+                },
+                {
+                  "value": "approval",
+                  "argumentInfo": {
+                    "argumentName": "processDefinitionKey",
+                    "formattedValue": "\"approval\""
+                  }
+                },
+                {
+                  "value": "is deployed"
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 487048731
+            },
+            {
+              "name": "process is started for request",
+              "words": [
+                {
+                  "value": "When",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "process is started for request"
+                },
+                {
+                  "value": "6e97e096-d40f-4008-a56b-c75505c9b975",
+                  "argumentInfo": {
+                    "argumentName": "approvalRequestId",
+                    "formattedValue": "6e97e096-d40f-4008-a56b-c75505c9b975"
+                  }
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 83195194
+            },
+            {
+              "name": "process waits in $",
+              "words": [
+                {
+                  "value": "Then",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "process waits in"
+                },
+                {
+                  "value": "start",
+                  "argumentInfo": {
+                    "argumentName": "activityId",
+                    "formattedValue": "\"start\""
+                  }
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 30227928
+            }
+          ],
+          "explicitArguments": [],
+          "derivedArguments": [],
+          "status": "SUCCESS",
+          "success": true,
+          "durationInNanos": 698063747
+        }
+      ],
+      "durationInNanos": 698063747,
+      "executionStatus": "SUCCESS"
+    },
+    {
+      "className": "io.holunda.testing.examples.basic.ApprovalProcessTest",
+      "testMethodName": "should manually approve",
+      "description": "should manually approve",
+      "tagIds": [],
+      "explicitParameters": [],
+      "derivedParameters": [],
+      "casesAsTable": false,
+      "scenarioCases": [
+        {
+          "caseNr": 1,
+          "steps": [
+            {
+              "name": "process $ is deployed",
+              "words": [
+                {
+                  "value": "Given",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "process"
+                },
+                {
+                  "value": "approval",
+                  "argumentInfo": {
+                    "argumentName": "processDefinitionKey",
+                    "formattedValue": "\"approval\""
+                  }
+                },
+                {
+                  "value": "is deployed"
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 15534658
+            },
+            {
+              "name": "process is started for request",
+              "words": [
+                {
+                  "value": "and",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "process is started for request"
+                },
+                {
+                  "value": "96c69e12-00a3-4a6d-8b54-e1871db2b506",
+                  "argumentInfo": {
+                    "argumentName": "approvalRequestId",
+                    "formattedValue": "96c69e12-00a3-4a6d-8b54-e1871db2b506"
+                  }
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 36581
+            },
+            {
+              "name": "approval strategy can be applied",
+              "words": [
+                {
+                  "value": "and",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "approval strategy can be applied"
+                },
+                {
+                  "value": "MANUAL",
+                  "argumentInfo": {
+                    "argumentName": "approvalStrategy",
+                    "formattedValue": "MANUAL"
+                  }
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 38422
+            },
+            {
+              "name": "process continues",
+              "words": [
+                {
+                  "value": "and",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "process continues"
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 45428
+            },
+            {
+              "name": "process waits in $",
+              "words": [
+                {
+                  "value": "and",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "process waits in"
+                },
+                {
+                  "value": "user_approve_request",
+                  "argumentInfo": {
+                    "argumentName": "activityId",
+                    "formattedValue": "\"user_approve_request\""
+                  }
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 7035392
+            },
+            {
+              "name": "task is completed with variables",
+              "words": [
+                {
+                  "value": "When",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "task is completed with variables"
+                },
+                {
+                  "value": "{\n  approvalDecision \u003d\u003e Untyped value \u0027APPROVE\u0027, isTransient \u003d false\n}",
+                  "argumentInfo": {
+                    "argumentName": "variables",
+                    "formattedValue": "{\n  approvalDecision \u003d\u003e Untyped value \u0027APPROVE\u0027, isTransient \u003d false\n}"
+                  }
+                },
+                {
+                  "value": "true",
+                  "argumentInfo": {
+                    "argumentName": "continueIfAsync",
+                    "formattedValue": "true"
+                  }
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 46055789
+            },
+            {
+              "name": "process is finished",
+              "words": [
+                {
+                  "value": "Then",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "process is finished"
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 48578
+            },
+            {
+              "name": "process has passed element(s) $",
+              "words": [
+                {
+                  "value": "and",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "process has passed element(s)"
+                },
+                {
+                  "value": "end_approved",
+                  "argumentInfo": {
+                    "argumentName": "elements",
+                    "formattedValue": "\"end_approved\""
+                  }
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 44830190
+            }
+          ],
+          "explicitArguments": [],
+          "derivedArguments": [],
+          "status": "SUCCESS",
+          "success": true,
+          "durationInNanos": 252610542
+        }
+      ],
+      "durationInNanos": 252610542,
+      "executionStatus": "SUCCESS"
+    },
+    {
+      "className": "io.holunda.testing.examples.basic.ApprovalProcessTest",
+      "testMethodName": "should deploy",
+      "description": "should deploy",
+      "tagIds": [],
+      "explicitParameters": [],
+      "derivedParameters": [],
+      "casesAsTable": false,
+      "scenarioCases": [
+        {
+          "caseNr": 1,
+          "steps": [
+            {
+              "name": "process $ is deployed",
+              "words": [
+                {
+                  "value": "Given",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "process"
+                },
+                {
+                  "value": "approval",
+                  "argumentInfo": {
+                    "argumentName": "processDefinitionKey",
+                    "formattedValue": "\"approval\""
+                  }
+                },
+                {
+                  "value": "is deployed"
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 35972636
+            }
+          ],
+          "explicitArguments": [],
+          "derivedArguments": [],
+          "status": "SUCCESS",
+          "success": true,
+          "durationInNanos": 37084825
+        }
+      ],
+      "durationInNanos": 37084825,
+      "executionStatus": "SUCCESS"
+    },
+    {
+      "className": "io.holunda.testing.examples.basic.ApprovalProcessTest",
+      "testMethodName": "should automatically approve",
+      "description": "should automatically approve",
+      "tagIds": [],
+      "explicitParameters": [],
+      "derivedParameters": [],
+      "casesAsTable": false,
+      "scenarioCases": [
+        {
+          "caseNr": 1,
+          "steps": [
+            {
+              "name": "process $ is deployed",
+              "words": [
+                {
+                  "value": "Given",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "process"
+                },
+                {
+                  "value": "approval",
+                  "argumentInfo": {
+                    "argumentName": "processDefinitionKey",
+                    "formattedValue": "\"approval\""
+                  }
+                },
+                {
+                  "value": "is deployed"
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 43457
+            },
+            {
+              "name": "process is started for request",
+              "words": [
+                {
+                  "value": "and",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "process is started for request"
+                },
+                {
+                  "value": "0f3d8e8f-b134-40a9-b8de-3efc26ce1509",
+                  "argumentInfo": {
+                    "argumentName": "approvalRequestId",
+                    "formattedValue": "0f3d8e8f-b134-40a9-b8de-3efc26ce1509"
+                  }
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 35350
+            },
+            {
+              "name": "approval strategy can be applied",
+              "words": [
+                {
+                  "value": "and",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "approval strategy can be applied"
+                },
+                {
+                  "value": "AUTOMATIC",
+                  "argumentInfo": {
+                    "argumentName": "approvalStrategy",
+                    "formattedValue": "AUTOMATIC"
+                  }
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 27512
+            },
+            {
+              "name": "automatic approval returns",
+              "words": [
+                {
+                  "value": "and",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "automatic approval returns"
+                },
+                {
+                  "value": "APPROVE",
+                  "argumentInfo": {
+                    "argumentName": "approvalDecision",
+                    "formattedValue": "APPROVE"
+                  }
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 435625
+            },
+            {
+              "name": "process continues",
+              "words": [
+                {
+                  "value": "When",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "process continues"
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 22769670
+            },
+            {
+              "name": "process is finished",
+              "words": [
+                {
+                  "value": "Then",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "process is finished"
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 35526
+            },
+            {
+              "name": "process has passed element(s) $",
+              "words": [
+                {
+                  "value": "and",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "process has passed element(s)"
+                },
+                {
+                  "value": "service_auto_approve_request, end_approved",
+                  "argumentInfo": {
+                    "argumentName": "elements",
+                    "formattedValue": "\"service_auto_approve_request\", \"end_approved\""
+                  }
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 8001525
+            }
+          ],
+          "explicitArguments": [],
+          "derivedArguments": [],
+          "status": "SUCCESS",
+          "success": true,
+          "durationInNanos": 84171684
+        }
+      ],
+      "durationInNanos": 84171684,
+      "executionStatus": "SUCCESS"
+    },
+    {
+      "className": "io.holunda.testing.examples.basic.ApprovalProcessTest",
+      "testMethodName": "should manually reject",
+      "description": "should manually reject",
+      "tagIds": [],
+      "explicitParameters": [],
+      "derivedParameters": [],
+      "casesAsTable": false,
+      "scenarioCases": [
+        {
+          "caseNr": 1,
+          "steps": [
+            {
+              "name": "process $ is deployed",
+              "words": [
+                {
+                  "value": "Given",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "process"
+                },
+                {
+                  "value": "approval",
+                  "argumentInfo": {
+                    "argumentName": "processDefinitionKey",
+                    "formattedValue": "\"approval\""
+                  }
+                },
+                {
+                  "value": "is deployed"
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 33469
+            },
+            {
+              "name": "process is started for request",
+              "words": [
+                {
+                  "value": "and",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "process is started for request"
+                },
+                {
+                  "value": "24e0bbcc-98b8-411d-8e3c-7f978d2dae1a",
+                  "argumentInfo": {
+                    "argumentName": "approvalRequestId",
+                    "formattedValue": "24e0bbcc-98b8-411d-8e3c-7f978d2dae1a"
+                  }
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 40394
+            },
+            {
+              "name": "approval strategy can be applied",
+              "words": [
+                {
+                  "value": "and",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "approval strategy can be applied"
+                },
+                {
+                  "value": "MANUAL",
+                  "argumentInfo": {
+                    "argumentName": "approvalStrategy",
+                    "formattedValue": "MANUAL"
+                  }
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 35265
+            },
+            {
+              "name": "process continues",
+              "words": [
+                {
+                  "value": "and",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "process continues"
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 44294
+            },
+            {
+              "name": "process waits in $",
+              "words": [
+                {
+                  "value": "and",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "process waits in"
+                },
+                {
+                  "value": "user_approve_request",
+                  "argumentInfo": {
+                    "argumentName": "activityId",
+                    "formattedValue": "\"user_approve_request\""
+                  }
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 63902
+            },
+            {
+              "name": "task\u0027s priority is between $lower $upper",
+              "words": [
+                {
+                  "value": "and",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "task\u0027s priority is between"
+                },
+                {
+                  "value": "10",
+                  "argumentInfo": {
+                    "argumentName": "lower",
+                    "formattedValue": "10"
+                  }
+                },
+                {
+                  "value": "30",
+                  "argumentInfo": {
+                    "argumentName": "upper",
+                    "formattedValue": "30"
+                  }
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 42720
+            },
+            {
+              "name": "task\u0027s follow-up date is $ after its creation",
+              "words": [
+                {
+                  "value": "and",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "task\u0027s follow-up date is"
+                },
+                {
+                  "value": "P1D",
+                  "argumentInfo": {
+                    "argumentName": "followUpDatePeriod",
+                    "formattedValue": "P1D"
+                  }
+                },
+                {
+                  "value": "after its creation"
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 16642190
+            },
+            {
+              "name": "task is completed with variables",
+              "words": [
+                {
+                  "value": "When",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "task is completed with variables"
+                },
+                {
+                  "value": "{\n  approvalDecision \u003d\u003e Untyped value \u0027REJECT\u0027, isTransient \u003d false\n}",
+                  "argumentInfo": {
+                    "argumentName": "variables",
+                    "formattedValue": "{\n  approvalDecision \u003d\u003e Untyped value \u0027REJECT\u0027, isTransient \u003d false\n}"
+                  }
+                },
+                {
+                  "value": "true",
+                  "argumentInfo": {
+                    "argumentName": "continueIfAsync",
+                    "formattedValue": "true"
+                  }
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 37693489
+            },
+            {
+              "name": "process is finished",
+              "words": [
+                {
+                  "value": "Then",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "process is finished"
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 30465
+            },
+            {
+              "name": "process has passed element(s) $",
+              "words": [
+                {
+                  "value": "and",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "process has passed element(s)"
+                },
+                {
+                  "value": "end_rejected",
+                  "argumentInfo": {
+                    "argumentName": "elements",
+                    "formattedValue": "\"end_rejected\""
+                  }
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 4148716
+            }
+          ],
+          "explicitArguments": [],
+          "derivedArguments": [],
+          "status": "SUCCESS",
+          "success": true,
+          "durationInNanos": 152733437
+        }
+      ],
+      "durationInNanos": 152733437,
+      "executionStatus": "SUCCESS"
+    },
+    {
+      "className": "io.holunda.testing.examples.basic.ApprovalProcessTest",
+      "testMethodName": "should automatically reject",
+      "description": "should automatically reject",
+      "tagIds": [],
+      "explicitParameters": [],
+      "derivedParameters": [],
+      "casesAsTable": false,
+      "scenarioCases": [
+        {
+          "caseNr": 1,
+          "steps": [
+            {
+              "name": "process $ is deployed",
+              "words": [
+                {
+                  "value": "Given",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "process"
+                },
+                {
+                  "value": "approval",
+                  "argumentInfo": {
+                    "argumentName": "processDefinitionKey",
+                    "formattedValue": "\"approval\""
+                  }
+                },
+                {
+                  "value": "is deployed"
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 26998
+            },
+            {
+              "name": "process is started for request",
+              "words": [
+                {
+                  "value": "and",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "process is started for request"
+                },
+                {
+                  "value": "c8079eb8-3e89-4b44-b270-dd1e25658953",
+                  "argumentInfo": {
+                    "argumentName": "approvalRequestId",
+                    "formattedValue": "c8079eb8-3e89-4b44-b270-dd1e25658953"
+                  }
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 45206
+            },
+            {
+              "name": "approval strategy can be applied",
+              "words": [
+                {
+                  "value": "and",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "approval strategy can be applied"
+                },
+                {
+                  "value": "AUTOMATIC",
+                  "argumentInfo": {
+                    "argumentName": "approvalStrategy",
+                    "formattedValue": "AUTOMATIC"
+                  }
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 24042
+            },
+            {
+              "name": "automatic approval returns",
+              "words": [
+                {
+                  "value": "and",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "automatic approval returns"
+                },
+                {
+                  "value": "REJECT",
+                  "argumentInfo": {
+                    "argumentName": "approvalDecision",
+                    "formattedValue": "REJECT"
+                  }
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 429686
+            },
+            {
+              "name": "process continues",
+              "words": [
+                {
+                  "value": "When",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "process continues"
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 13682097
+            },
+            {
+              "name": "process is finished",
+              "words": [
+                {
+                  "value": "Then",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "process is finished"
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 39544
+            },
+            {
+              "name": "process has passed element(s) $",
+              "words": [
+                {
+                  "value": "and",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "process has passed element(s)"
+                },
+                {
+                  "value": "service_auto_approve_request, end_rejected",
+                  "argumentInfo": {
+                    "argumentName": "elements",
+                    "formattedValue": "\"service_auto_approve_request\", \"end_rejected\""
+                  }
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 3170944
+            }
+          ],
+          "explicitArguments": [],
+          "derivedArguments": [],
+          "status": "SUCCESS",
+          "success": true,
+          "durationInNanos": 53295456
+        }
+      ],
+      "durationInNanos": 53295456,
+      "executionStatus": "SUCCESS"
+    }
+  ],
+  "tagMap": {}
+}

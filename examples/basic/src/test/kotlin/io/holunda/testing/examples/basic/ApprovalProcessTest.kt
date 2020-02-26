@@ -11,6 +11,7 @@ import org.camunda.bpm.engine.variable.Variables.putValue
 import org.camunda.bpm.spring.boot.starter.test.helper.StandaloneInMemoryTestConfiguration
 import org.junit.Rule
 import org.junit.Test
+import java.time.Period
 import java.util.*
 
 
@@ -112,6 +113,8 @@ open class ApprovalProcessTest : ScenarioTest<ApprovalProcessActionStage, Approv
       .process_waits_in(Elements.USER_APPROVE_REQUEST)
       .and()
       .task_priority_is_between(10, 30)
+      .and()
+      .task_has_follow_up_date_after(Period.ofDays(1))
 
     whenever()
       .task_is_completed_with_variables(

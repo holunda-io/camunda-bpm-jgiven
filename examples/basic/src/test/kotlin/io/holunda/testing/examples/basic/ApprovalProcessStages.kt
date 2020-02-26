@@ -3,12 +3,14 @@ package io.holunda.testing.examples.basic
 import com.tngtech.jgiven.annotation.BeforeStage
 import io.holunda.camunda.bpm.extension.jgiven.JGivenProcessStage
 import io.holunda.camunda.bpm.extension.jgiven.ProcessStage
+import io.holunda.testing.examples.basic.ApprovalProcessBean.Expressions.APPROVE_REQUEST_TASK_LISTENER
 import io.holunda.testing.examples.basic.ApprovalProcessBean.Expressions.AUTOMATICALLY_APPROVE_REQUEST
 import io.holunda.testing.examples.basic.ApprovalProcessBean.Expressions.DETERMINE_APPROVAL_STRATEGY
 import io.holunda.testing.examples.basic.ApprovalProcessBean.Expressions.LOAD_APPROVAL_REQUEST
 import io.holunda.testing.examples.basic.ApprovalProcessBean.Variables.APPROVAL_DECISION
 import io.holunda.testing.examples.basic.ApprovalProcessBean.Variables.APPROVAL_STRATEGY
 import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.assertThat
+import org.camunda.bpm.engine.test.mock.Mocks
 import org.camunda.bpm.engine.variable.Variables
 import org.camunda.bpm.extension.mockito.CamundaMockito.getJavaDelegateMock
 import org.camunda.bpm.extension.mockito.CamundaMockito.registerJavaDelegateMock
@@ -22,6 +24,8 @@ class ApprovalProcessActionStage : ProcessStage<ApprovalProcessActionStage, Appr
     registerJavaDelegateMock(DETERMINE_APPROVAL_STRATEGY)
     registerJavaDelegateMock(AUTOMATICALLY_APPROVE_REQUEST)
     registerJavaDelegateMock(LOAD_APPROVAL_REQUEST)
+    // register a real listener
+    Mocks.register(APPROVE_REQUEST_TASK_LISTENER, BasicProcessApplication().approveRequestTaskListener())
   }
 
   fun process_is_started_for_request(approvalRequestId: String): ApprovalProcessActionStage {

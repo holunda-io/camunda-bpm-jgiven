@@ -38,6 +38,7 @@ class ApprovalProcessBean(private val processEngine: ProcessEngine) : Supplier<P
     const val DETERMINE_APPROVAL_STRATEGY = "determineApprovalStrategy"
     const val AUTOMATICALLY_APPROVE_REQUEST = "automaticallyApproveRequest"
     const val AUTOMATIC_APPROVAL_FAILED = "automaticApprovalFailed"
+    const val APPROVE_REQUEST_TASK_LISTENER = "approveRequestTaskListener"
 
     object ApprovalStrategy {
       const val AUTOMATIC = "AUTOMATIC"
