@@ -11,7 +11,7 @@ Camunda specific stages and scenarios for the BDD testing tool JGiven written in
 
 ## Motivation
 
-Starting from 2012, we are preach that processes are no units. Behavior-driven development (BDD) and the
+Starting from 2012, we are preaching that processes are no units. Behavior-driven development (BDD) and the
 underlying testing methodology of scenario-based testing is a way more adequate and convenient for writing
 process (model) tests. 
 
