@@ -50,7 +50,7 @@
       <bpmn:outgoing>SequenceFlow_1p4jixi</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="SequenceFlow_1p4jixi" sourceRef="ExclusiveGateway_1uzhki5" targetRef="service_load_request" />
-    <bpmn:serviceTask id="service_auto_approve_request" name="Automatically&#10;approve&#10;request" camunda:delegateExpression="${automaticallyApproveRequest}">
+    <bpmn:serviceTask id="service_auto_approve_request" name="Automatically&#10;approve&#10;request" camunda:type="external" camunda:topic="approve-request">
       <bpmn:incoming>SequenceFlow_064ef2y</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1wtga4h</bpmn:outgoing>
     </bpmn:serviceTask>
