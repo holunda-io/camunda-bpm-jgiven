@@ -146,7 +146,7 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
       .isBetween(lower, upper)
     return self()
   }
-  
+
   @As("variable \$variableName is set to \$value")
   fun variable_is_set(@Quoted variableName: String, @Quoted value: Any): SELF {
     assertThat(processInstanceSupplier.get()).hasVariables(variableName)

@@ -36,9 +36,3 @@ jobs:
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-
-#
-# Notify slack channel
-#
-notifications:
-  slack: holunda:OBhk0v6b16pLFphCq3siuDIZ
