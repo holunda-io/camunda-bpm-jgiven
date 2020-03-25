@@ -1,16 +1,17 @@
 package io.holunda.camunda.bpm.extension.jgiven
 
 import com.tngtech.jgiven.Stage
-import com.tngtech.jgiven.annotation.As
-import com.tngtech.jgiven.annotation.ExpectedScenarioState
-import com.tngtech.jgiven.annotation.Quoted
-import com.tngtech.jgiven.annotation.ScenarioState
+import com.tngtech.jgiven.annotation.*
 import com.tngtech.jgiven.base.ScenarioTestBase
+import com.tngtech.jgiven.format.BooleanFormatter
 import io.holunda.camunda.bpm.extension.jgiven.formatter.QuotedVarargs
+import io.holunda.camunda.bpm.extension.jgiven.formatter.VariableMapFormat
 import org.assertj.core.api.Assertions.*
 import org.camunda.bpm.engine.runtime.ProcessInstance
 import org.camunda.bpm.engine.test.ProcessEngineRule
 import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*
+import org.camunda.bpm.engine.variable.VariableMap
+import org.camunda.bpm.engine.variable.Variables.createVariables
 import java.time.Period
 import java.util.*
 import java.util.function.Supplier
@@ -54,7 +55,7 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
     @ScenarioState
     lateinit var processInstanceSupplier: PROCESS_BEAN
 
-     @As("process waits in $")
+    @As("process waits in $")
     fun process_waits_in(@Quoted activityId: String): SELF {
         assertThat(processInstanceSupplier.get()).isWaitingAt(activityId)
         return self()
@@ -171,8 +172,9 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
      * @param continueIfAsync if <code>true</code> expects that the task is marked as async-after and continues the execution
      * after completion. Defaults to <code>false</code>.
      */
-    @As("task is completed with variables \$variables")
-    fun task_is_completed_with_variables(variables: Map<String, Any> = mapOf(), continueIfAsync: Boolean = false): SELF {
+    @As("task is completed with variables $")
+    fun task_is_completed_with_variables(@VariableMapFormat variables: VariableMap = createVariables(),
+                                         @Hidden continueIfAsync: Boolean = false): SELF {
         val taskDefinitionKey = task().taskDefinitionKey
         taskService().complete(task().id, variables)
         if (continueIfAsync) {
@@ -214,7 +216,7 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
     }
 
     @As("external task on topic \$topicName is completed with variables \$variables")
-    fun external_task_is_completed(@Quoted topicName: String, variables: Map<String, Any> = mapOf(), continueIfAsync: Boolean = false): SELF {
+    fun external_task_is_completed(@Quoted topicName: String, @VariableMapFormat variables: VariableMap = createVariables(), continueIfAsync: Boolean = false): SELF {
         camunda
             .externalTaskService
             .fetchAndLock(10, "test-worker")
@@ -230,6 +232,25 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
         if (continueIfAsync) {
             process_continues()
         }
+
+        return self()
+    }
+
+    @As("message \$messageName is received setting variables \$variables")
+    fun message_is_received(@Quoted messageName: String, variables: VariableMap = createVariables()): SELF {
+
+        // exactly one subscription
+        assertThat(camunda.processEngine.runtimeService
+            .createEventSubscriptionQuery()
+            .processInstanceId(processInstanceSupplier.get().processInstanceId)
+            .eventType("message")
+            .eventName(messageName).count()
+        ).isEqualTo(1)
+
+        camunda.processEngine.runtimeService
+            .createMessageCorrelation(messageName)
+            .setVariables(variables)
+            .correlate()
 
         return self()
     }
