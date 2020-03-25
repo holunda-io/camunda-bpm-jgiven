@@ -2,8 +2,7 @@
 Camunda specific stages and scenarios for the BDD testing tool JGiven written in Kotlin.
 
 
-
-[![Build Status](https://travis-ci.org/holunda-io/camunda-bpm-jgiven.svg?branch=master)](https://travis-ci.org/holunda-io/camunda-bpm-jgiven) 
+[![Development braches](https://github.com/holunda-io/camunda-bpm-jgiven/workflows/Development%20braches/badge.svg)](https://github.com/holunda-io/camunda-bpm-jgiven/workflows) 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.holunda.testing/camunda-bpm-jgiven/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.holunda.testing/camunda-bpm-jgiven)
 [![codecov](https://codecov.io/gh/holunda-io/camunda-bpm-jgiven/branch/master/graph/badge.svg)](https://codecov.io/gh/holunda-io/camunda-bpm-jgiven)
 
@@ -11,7 +10,7 @@ Camunda specific stages and scenarios for the BDD testing tool JGiven written in
 
 ## Motivation
 
-Starting from 2012, we are preach that processes are no units. Behavior-driven development (BDD) and the
+Starting from 2012, we are preaching that processes are no units. Behavior-driven development (BDD) and the
 underlying testing methodology of scenario-based testing is a way more adequate and convenient for writing
 process (model) tests. 
 
@@ -119,7 +118,7 @@ If you have permissions to release, make sure all branches are fetched and run:
 from cli. This will update the poms of `develop` and `master` branches.
 If you want to publish to central and have sufficient permissions, run
 
-     ./mvnw clean deploy -Prelease
+     ./mvnw clean deploy -Prelease -DskipExamples
      
 on `master` branch. Don't forget to close and release repository on https://oss.sonatype.org/#stagingRepositories.
 

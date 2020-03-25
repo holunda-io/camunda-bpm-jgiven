@@ -6,16 +6,12 @@
   <parent>
     <groupId>io.holunda.testing</groupId>
     <artifactId>camunda-bpm-jgiven-examples</artifactId>
-    <version>0.0.5</version>
+    <version>0.0.6</version>
   </parent>
 
   <artifactId>camunda-bpm-jgiven-examples-basic</artifactId>
   <packaging>jar</packaging>
 
-  <properties>
-    <maven.deploy.skip>true</maven.deploy.skip>
-  </properties>
-  
   <dependencies>
     <dependency>
       <groupId>org.camunda.bpm.springboot</groupId>

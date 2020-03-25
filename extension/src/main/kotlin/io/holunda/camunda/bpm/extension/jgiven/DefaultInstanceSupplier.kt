@@ -9,7 +9,6 @@ import java.util.function.Supplier
  * Consider implementing a start method to start the process.
  */
 open class DefaultInstanceSupplier(
-  private val runtimeService: RuntimeService,
   protected var processInstance: ProcessInstance?
 ) : Supplier<ProcessInstance> {
 
@@ -17,6 +16,4 @@ open class DefaultInstanceSupplier(
     require(processInstance != null) { "Process has not been started. Consider starting it before accessing the process instance." }
     return processInstance!!
   }
-
-
 }

@@ -5,8 +5,8 @@
 
   <parent>
     <groupId>io.holunda.testing</groupId>
-    <artifactId>camunda-bpm-jgiven-root</artifactId>
-    <version>0.0.5</version>
+    <artifactId>camunda-bpm-jgiven-parent</artifactId>
+    <version>0.0.6</version>
   </parent>
 
   <artifactId>camunda-bpm-jgiven-examples</artifactId>
@@ -15,7 +15,6 @@
   <properties>
     <spring-boot.version>2.1.6.RELEASE</spring-boot.version>
     <camunda-spring-boot.version>3.3.4</camunda-spring-boot.version>
-    <maven.deploy.skip>true</maven.deploy.skip>
   </properties>
 
   <modules>
