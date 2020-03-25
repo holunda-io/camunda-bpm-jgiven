@@ -139,7 +139,7 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
     return self()
   }
 
-  @As("task's priority is between \$lower \$upper")
+  @As("task's priority is between \$lower and \$upper")
   fun task_priority_is_between(lower: Int = 0, upper: Int = 100): SELF {
     assertThat(task().priority)
       .`as`("Expecting task priority to be between %d and %d, but it was %d.", lower, upper, task().priority)
@@ -168,6 +168,7 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
    * @param continueIfAsync if <code>true</code> expects that the task is marked as async-after and continues the execution
    * after completion. Defaults to <code>false</code>.
    */
+  @As("task is completed with variables \$variables")
   fun task_is_completed_with_variables(variables: Map<String, Any> = mapOf(), continueIfAsync: Boolean = false): SELF {
     val taskDefinitionKey = task().taskDefinitionKey
     taskService().complete(task().id, variables)
