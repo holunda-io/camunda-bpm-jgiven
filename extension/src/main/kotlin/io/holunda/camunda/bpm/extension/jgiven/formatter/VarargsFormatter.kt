@@ -9,6 +9,9 @@ import com.tngtech.jgiven.format.PrintfFormatter
  */
 open class VarargsFormatter : ArgumentFormatter<Any> {
 
+  /**
+   * Formatter.
+   */
   private val printfFormatter = PrintfFormatter()
 
   override fun format(argumentToFormat: Any?, vararg formatterArguments: String?): String = if (argumentToFormat is Array<*>) {
