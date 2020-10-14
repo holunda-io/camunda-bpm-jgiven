@@ -24,7 +24,7 @@ class ApprovalProcessActionStage : ProcessStage<ApprovalProcessActionStage, Appr
 
 
   @BeforeStage
-  fun automock_all_delegates() {
+  fun mock_all_delegates() {
     registerJavaDelegateMock(DETERMINE_APPROVAL_STRATEGY)
     registerJavaDelegateMock(LOAD_APPROVAL_REQUEST)
     // register a real listener

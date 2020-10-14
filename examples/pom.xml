@@ -13,8 +13,7 @@
   <packaging>pom</packaging>
 
   <properties>
-    <spring-boot.version>2.1.6.RELEASE</spring-boot.version>
-    <camunda-spring-boot.version>3.3.4</camunda-spring-boot.version>
+    <spring-boot.version>2.3.4.RELEASE</spring-boot.version>
   </properties>
 
   <modules>
@@ -23,6 +22,15 @@
 
   <dependencyManagement>
     <dependencies>
+      <!-- reimport to get correct kotlin version -->
+      <dependency>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <artifactId>kotlin-bom</artifactId>
+        <version>${kotlin.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
@@ -33,12 +41,12 @@
       <dependency>
         <groupId>org.camunda.bpm.springboot</groupId>
         <artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
-        <version>${camunda-spring-boot.version}</version>
+        <version>${camunda.version}</version>
       </dependency>
       <dependency>
         <groupId>org.camunda.bpm.springboot</groupId>
         <artifactId>camunda-bpm-spring-boot-starter-test</artifactId>
-        <version>${camunda-spring-boot.version}</version>
+        <version>${camunda.version}</version>
       </dependency>
       <dependency>
         <groupId>io.holunda.testing</groupId>

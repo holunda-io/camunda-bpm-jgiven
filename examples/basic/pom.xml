@@ -24,7 +24,7 @@
     <dependency>
       <groupId>org.camunda.bpm.extension.mockito</groupId>
       <artifactId>camunda-bpm-mockito</artifactId>
-      <version>4.0.0</version>
+      <version>4.13.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -45,6 +45,12 @@
     <dependency>
       <groupId>io.holunda.testing</groupId>
       <artifactId>camunda-bpm-jgiven</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.camunda.bpm.extension</groupId>
+      <artifactId>camunda-bpm-process-test-coverage</artifactId>
+      <version>0.3.2</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

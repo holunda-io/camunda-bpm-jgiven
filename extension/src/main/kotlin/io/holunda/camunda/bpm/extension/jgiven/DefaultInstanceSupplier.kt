@@ -1,6 +1,5 @@
 package io.holunda.camunda.bpm.extension.jgiven
 
-import org.camunda.bpm.engine.RuntimeService
 import org.camunda.bpm.engine.runtime.ProcessInstance
 import java.util.function.Supplier
 
