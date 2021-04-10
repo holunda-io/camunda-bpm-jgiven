@@ -286,7 +286,7 @@
           <!-- javadoc for kotlin -->
           <groupId>org.jetbrains.dokka</groupId>
           <artifactId>dokka-maven-plugin</artifactId>
-          <version>${kotlin.version}</version>
+          <version>1.4.30</version>
           <executions>
             <execution>
               <phase>test</phase>
