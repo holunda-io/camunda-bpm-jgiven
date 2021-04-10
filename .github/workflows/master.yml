@@ -12,13 +12,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v1
 
-      - name: Cache .m2
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven
+#      - name: Cache .m2
+#        uses: actions/cache@v1
+#        with:
+#          path: ~/.m2/repository
+#          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+#          restore-keys: |
+#            ${{ runner.os }}-maven
 
       # Get GPG private key into GPG
       - name: Import GPG Owner Trust
