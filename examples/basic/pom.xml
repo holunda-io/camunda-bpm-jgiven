@@ -50,7 +50,8 @@
     <dependency>
       <groupId>org.camunda.bpm.extension</groupId>
       <artifactId>camunda-bpm-process-test-coverage</artifactId>
-      <version>0.3.2</version>
+      <!-- This works only locally, since the version is not released -->
+      <version>0.3.3-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

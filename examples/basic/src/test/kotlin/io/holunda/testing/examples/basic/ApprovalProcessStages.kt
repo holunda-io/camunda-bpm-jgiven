@@ -1,12 +1,9 @@
 package io.holunda.testing.examples.basic
 
-import com.tngtech.jgiven.annotation.As
-import com.tngtech.jgiven.annotation.BeforeStage
-import com.tngtech.jgiven.annotation.Quoted
+import com.tngtech.jgiven.annotation.*
 import io.holunda.camunda.bpm.extension.jgiven.JGivenProcessStage
 import io.holunda.camunda.bpm.extension.jgiven.ProcessStage
 import io.holunda.testing.examples.basic.ApprovalProcessBean.Expressions.APPROVE_REQUEST_TASK_LISTENER
-import io.holunda.testing.examples.basic.ApprovalProcessBean.Expressions.AUTOMATICALLY_APPROVE_REQUEST
 import io.holunda.testing.examples.basic.ApprovalProcessBean.Expressions.DETERMINE_APPROVAL_STRATEGY
 import io.holunda.testing.examples.basic.ApprovalProcessBean.Expressions.LOAD_APPROVAL_REQUEST
 import io.holunda.testing.examples.basic.ApprovalProcessBean.Variables.APPROVAL_DECISION
@@ -18,10 +15,11 @@ import org.camunda.bpm.engine.variable.Variables
 import org.camunda.bpm.engine.variable.Variables.putValue
 import org.camunda.bpm.extension.mockito.CamundaMockito.getJavaDelegateMock
 import org.camunda.bpm.extension.mockito.CamundaMockito.registerJavaDelegateMock
+import org.camunda.bpm.extension.process_test_coverage.junit.rules.AggregatedCoverageTestRunState
+import org.junit.AfterClass
 
 @JGivenProcessStage
 class ApprovalProcessActionStage : ProcessStage<ApprovalProcessActionStage, ApprovalProcessBean>() {
-
 
   @BeforeStage
   fun mock_all_delegates() {

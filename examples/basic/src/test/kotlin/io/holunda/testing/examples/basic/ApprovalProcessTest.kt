@@ -1,14 +1,17 @@
 package io.holunda.testing.examples.basic
 
-import com.tngtech.jgiven.annotation.ScenarioState
-import com.tngtech.jgiven.junit.ScenarioTest
-import io.holunda.camunda.bpm.extension.jgiven.whenever
+import com.tngtech.jgiven.annotation.ProvidedScenarioState
+import io.holunda.camunda.bpm.extension.jgiven.GIVEN
+import io.holunda.camunda.bpm.extension.jgiven.THEN
+import io.holunda.camunda.bpm.extension.jgiven.WHEN
 import io.holunda.testing.examples.basic.ApprovalProcessBean.Elements
 import io.holunda.testing.examples.basic.ApprovalProcessBean.Expressions
 import org.camunda.bpm.engine.test.Deployment
 import org.camunda.bpm.engine.test.ProcessEngineRule
 import org.camunda.bpm.engine.variable.Variables.putValue
 import org.camunda.bpm.spring.boot.starter.test.helper.StandaloneInMemoryTestConfiguration
+import org.junit.AfterClass
+import org.junit.ClassRule
 import org.junit.Rule
 import org.junit.Test
 import java.time.Period
@@ -16,166 +19,173 @@ import java.util.*
 
 
 @Deployment(resources = [ApprovalProcessBean.RESOURCE])
-open class ApprovalProcessTest : ScenarioTest<ApprovalProcessActionStage, ApprovalProcessActionStage, ApprovalProcessThenStage>() {
+open class ApprovalProcessTest : CoverageScenarioProcessTest<ApprovalProcessActionStage, ApprovalProcessThenStage>() {
 
-    companion object {
-        val processEngineRule = StandaloneInMemoryTestConfiguration().rule()
+  companion object {
+
+//    private val coverageDataHolder = CoverageDataHolder()
+//
+//    @JvmField
+//    @Rule
+//    @ClassRule
+//    var coverageRule: ProcessEngineRule = initializeRule(coverageDataHolder, StandaloneInMemoryTestConfiguration().processEngine)
+
+    @JvmStatic
+    @AfterClass
+    fun report() {
+      coverageDataHolder.reportCoverage(ApprovalProcessTest::class)
     }
+  }
 
-    @get: Rule
-    @ScenarioState
-    val camunda: ProcessEngineRule = processEngineRule
+  @Test
+  fun `should deploy`() {
+    THEN()
+      .process_is_deployed(ApprovalProcessBean.KEY)
+  }
 
+  @Test
+  fun `should start asynchronously`() {
 
-    @Test
-    fun `should deploy`() {
-        then()
-            .process_is_deployed(ApprovalProcessBean.KEY)
-    }
+    val approvalRequestId = UUID.randomUUID().toString()
 
-    @Test
-    fun `should start asynchronously`() {
+    GIVEN()
+      .process_is_deployed(ApprovalProcessBean.KEY)
+    WHEN()
+      .process_is_started_for_request(approvalRequestId)
+    THEN()
+      .process_waits_in(Elements.START)
+  }
 
-        val approvalRequestId = UUID.randomUUID().toString()
+  @Test
+  fun `should wait for automatic approve`() {
 
-        given()
-            .process_is_deployed(ApprovalProcessBean.KEY)
-        whenever()
-            .process_is_started_for_request(approvalRequestId)
-        then()
-            .process_waits_in(Elements.START)
-    }
+    val approvalRequestId = UUID.randomUUID().toString()
 
-    @Test
-    fun `should wait for automatic approve`() {
+    GIVEN()
+      .process_is_deployed(ApprovalProcessBean.KEY)
+      .and()
+      .process_is_started_for_request(approvalRequestId)
+      .and()
+      .approval_strategy_can_be_applied(Expressions.ApprovalStrategy.AUTOMATIC)
 
-        val approvalRequestId = UUID.randomUUID().toString()
+    WHEN()
+      .process_continues()
 
-        given()
-            .process_is_deployed(ApprovalProcessBean.KEY)
-            .and()
-            .process_is_started_for_request(approvalRequestId)
-            .and()
-            .approval_strategy_can_be_applied(Expressions.ApprovalStrategy.AUTOMATIC)
+    THEN()
+      .process_waits_in(Elements.SERVICE_AUTO_APPROVE)
+      .and()
+      .external_task_exists("approve-request")
 
-        whenever()
-            .process_continues()
+  }
 
-        then()
-            .process_waits_in(Elements.SERVICE_AUTO_APPROVE)
-            .and()
-            .external_task_exists("approve-request")
+  @Test
+  fun `should automatic approve`() {
 
-    }
+    val approvalRequestId = UUID.randomUUID().toString()
 
-    @Test
-    fun `should automatic approve`() {
+    GIVEN()
+      .process_is_deployed(ApprovalProcessBean.KEY)
+      .and()
+      .process_is_started_for_request(approvalRequestId)
+      .and()
+      .approval_strategy_can_be_applied(Expressions.ApprovalStrategy.AUTOMATIC)
+      .and()
+      .process_continues()
 
-        val approvalRequestId = UUID.randomUUID().toString()
+    WHEN()
+      .automatic_approval_returns(Expressions.ApprovalDecision.APPROVE)
 
-        given()
-            .process_is_deployed(ApprovalProcessBean.KEY)
-            .and()
-            .process_is_started_for_request(approvalRequestId)
-            .and()
-            .approval_strategy_can_be_applied(Expressions.ApprovalStrategy.AUTOMATIC)
-            .and()
-            .process_continues()
+    THEN()
+      .process_is_finished()
+      .and()
+      .process_has_passed(Elements.SERVICE_AUTO_APPROVE, Elements.END_APPROVED)
 
-        whenever()
-            .automatic_approval_returns(Expressions.ApprovalDecision.APPROVE)
-
-        then()
-            .process_is_finished()
-            .and()
-            .process_has_passed(Elements.SERVICE_AUTO_APPROVE, Elements.END_APPROVED)
-
-    }
+  }
 
 
-    @Test
-    fun `should automatically reject`() {
+  @Test
+  fun `should automatically reject`() {
 
-        val approvalRequestId = UUID.randomUUID().toString()
+    val approvalRequestId = UUID.randomUUID().toString()
 
-        given()
-            .process_is_deployed(ApprovalProcessBean.KEY)
-            .and()
-            .process_is_started_for_request(approvalRequestId)
-            .and()
-            .approval_strategy_can_be_applied(Expressions.ApprovalStrategy.AUTOMATIC)
-            .and()
-            .process_continues()
+    GIVEN()
+      .process_is_deployed(ApprovalProcessBean.KEY)
+      .and()
+      .process_is_started_for_request(approvalRequestId)
+      .and()
+      .approval_strategy_can_be_applied(Expressions.ApprovalStrategy.AUTOMATIC)
+      .and()
+      .process_continues()
 
-        whenever()
-            .automatic_approval_returns(Expressions.ApprovalDecision.REJECT)
+    WHEN()
+      .automatic_approval_returns(Expressions.ApprovalDecision.REJECT)
 
-        then()
-            .process_is_finished()
-            .and()
-            .process_has_passed(Elements.SERVICE_AUTO_APPROVE, Elements.END_REJECTED)
+    THEN()
+      .process_is_finished()
+      .and()
+      .process_has_passed(Elements.SERVICE_AUTO_APPROVE, Elements.END_REJECTED)
 
-    }
+  }
 
-    @Test
-    fun `should manually reject`() {
+  @Test
+  fun `should manually reject`() {
 
-        val approvalRequestId = UUID.randomUUID().toString()
+    val approvalRequestId = UUID.randomUUID().toString()
 
-        given()
-            .process_is_deployed(ApprovalProcessBean.KEY)
-            .and()
-            .process_is_started_for_request(approvalRequestId)
-            .and()
-            .approval_strategy_can_be_applied(Expressions.ApprovalStrategy.MANUAL)
-            .and()
-            .process_continues()
-            .and()
-            .process_waits_in(Elements.USER_APPROVE_REQUEST)
-            .and()
-            .task_priority_is_between(10, 30)
-            .and()
-            .task_has_follow_up_date_after(Period.ofDays(1))
+    GIVEN()
+      .process_is_deployed(ApprovalProcessBean.KEY)
+      .and()
+      .process_is_started_for_request(approvalRequestId)
+      .and()
+      .approval_strategy_can_be_applied(Expressions.ApprovalStrategy.MANUAL)
+      .and()
+      .process_continues()
+      .and()
+      .process_waits_in(Elements.USER_APPROVE_REQUEST)
+      .and()
+      .task_priority_is_between(10, 30)
+      .and()
+      .task_has_follow_up_date_after(Period.ofDays(1))
 
-        whenever()
-            .task_is_completed_with_variables(
-                putValue(ApprovalProcessBean.Variables.APPROVAL_DECISION, Expressions.ApprovalDecision.REJECT),
-                continueIfAsync = true
-            )
+    WHEN()
+      .task_is_completed_with_variables(
+        putValue(ApprovalProcessBean.Variables.APPROVAL_DECISION, Expressions.ApprovalDecision.REJECT),
+        continueIfAsync = true
+      )
 
-        then()
-            .process_is_finished()
-            .and()
-            .process_has_passed(Elements.END_REJECTED)
+    THEN()
+      .process_is_finished()
+      .and()
+      .process_has_passed(Elements.END_REJECTED)
 
-    }
+  }
 
-    @Test
-    fun `should manually approve`() {
+  @Test
+  fun `should manually approve`() {
 
-        val approvalRequestId = UUID.randomUUID().toString()
+    val approvalRequestId = UUID.randomUUID().toString()
 
-        given()
-            .process_is_deployed(ApprovalProcessBean.KEY)
-            .and()
-            .process_is_started_for_request(approvalRequestId)
-            .and()
-            .approval_strategy_can_be_applied(Expressions.ApprovalStrategy.MANUAL)
-            .and()
-            .process_continues()
-            .and()
-            .process_waits_in(Elements.USER_APPROVE_REQUEST)
+    GIVEN()
+      .process_is_deployed(ApprovalProcessBean.KEY)
+      .and()
+      .process_is_started_for_request(approvalRequestId)
+      .and()
+      .approval_strategy_can_be_applied(Expressions.ApprovalStrategy.MANUAL)
+      .and()
+      .process_continues()
+      .and()
+      .process_waits_in(Elements.USER_APPROVE_REQUEST)
 
-        whenever()
-            .task_is_completed_with_variables(
-                putValue(ApprovalProcessBean.Variables.APPROVAL_DECISION, Expressions.ApprovalDecision.APPROVE),
-                continueIfAsync = true
-            )
+    WHEN()
+      .task_is_completed_with_variables(
+        putValue(ApprovalProcessBean.Variables.APPROVAL_DECISION, Expressions.ApprovalDecision.APPROVE),
+        continueIfAsync = true
+      )
 
-        then()
-            .process_is_finished()
-            .and()
-            .process_has_passed(Elements.END_APPROVED)
+    THEN()
+      .process_is_finished()
+      .and()
+      .process_has_passed(Elements.END_APPROVED)
 
-    }
+  }
 }

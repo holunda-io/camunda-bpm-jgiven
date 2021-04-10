@@ -2,6 +2,7 @@
 <configuration>
   <include resource="org/springframework/boot/logging/logback/base.xml" />
 
+  <logger name="io.holunda.testing" level="DEBUG"/>
   <logger name="org.springframework" level="INFO"/>
 
   <logger name="org.apache.ibatis.transaction" level="OFF"/>
@@ -9,5 +10,7 @@
   <logger name="org.camunda.spin" level="ERROR" />
   <logger name="org.camunda.bpm.engine.cfg" level="WARN" />
   <logger name="org.camunda.bpm.engine" level="WARN" />
+  <logger name="org.camunda.bpm.connect" level="WARN" />
+  <logger name="org.camunda.feel" level="WARN" />
 
 </configuration>

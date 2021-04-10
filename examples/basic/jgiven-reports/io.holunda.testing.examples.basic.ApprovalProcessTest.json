@@ -36,7 +36,7 @@
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 377524897
+              "durationInNanos": 43353919
             },
             {
               "name": "process is started for request",
@@ -49,15 +49,15 @@
                   "value": "process is started for request"
                 },
                 {
-                  "value": "16c4a697-78e1-4ce1-8148-5b7eb8e984c4",
+                  "value": "4304eb50-b09d-4122-8d04-0db5a0c46c78",
                   "argumentInfo": {
                     "argumentName": "approvalRequestId",
-                    "formattedValue": "\"16c4a697-78e1-4ce1-8148-5b7eb8e984c4\""
+                    "formattedValue": "\"4304eb50-b09d-4122-8d04-0db5a0c46c78\""
                   }
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 85142833
+              "durationInNanos": 95612907
             },
             {
               "name": "process waits in $",
@@ -78,17 +78,17 @@
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 22523205
+              "durationInNanos": 35690661
             }
           ],
           "explicitArguments": [],
           "derivedArguments": [],
           "status": "SUCCESS",
           "success": true,
-          "durationInNanos": 544513222
+          "durationInNanos": 280064625
         }
       ],
-      "durationInNanos": 544513222,
+      "durationInNanos": 280064625,
       "executionStatus": "SUCCESS"
     },
     {
@@ -125,7 +125,7 @@
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 10574097
+              "durationInNanos": 17172365
             },
             {
               "name": "process is started for request",
@@ -138,15 +138,15 @@
                   "value": "process is started for request"
                 },
                 {
-                  "value": "19765d6b-7f52-428a-8b07-5c89e867989d",
+                  "value": "722cd5af-1cce-4c13-b0a7-57ef6554d647",
                   "argumentInfo": {
                     "argumentName": "approvalRequestId",
-                    "formattedValue": "\"19765d6b-7f52-428a-8b07-5c89e867989d\""
+                    "formattedValue": "\"722cd5af-1cce-4c13-b0a7-57ef6554d647\""
                   }
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 20476
+              "durationInNanos": 33043
             },
             {
               "name": "$approvalStrategy approval strategy can be applied",
@@ -167,7 +167,7 @@
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 22517
+              "durationInNanos": 71375
             },
             {
               "name": "process continues",
@@ -181,7 +181,7 @@
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 26573305
+              "durationInNanos": 52889788
             },
             {
               "name": "automatic approval returns",
@@ -202,7 +202,7 @@
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 27077512
+              "durationInNanos": 52417264
             },
             {
               "name": "process is finished",
@@ -216,7 +216,7 @@
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 26548
+              "durationInNanos": 68881
             },
             {
               "name": "process has passed element(s) $",
@@ -237,17 +237,17 @@
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 27150302
+              "durationInNanos": 60156134
             }
           ],
           "explicitArguments": [],
           "derivedArguments": [],
           "status": "SUCCESS",
           "success": true,
-          "durationInNanos": 141124944
+          "durationInNanos": 238077485
         }
       ],
-      "durationInNanos": 141124944,
+      "durationInNanos": 238077485,
       "executionStatus": "SUCCESS"
     },
     {
@@ -284,7 +284,7 @@
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 33792
+              "durationInNanos": 37434
             },
             {
               "name": "process is started for request",
@@ -297,15 +297,15 @@
                   "value": "process is started for request"
                 },
                 {
-                  "value": "da57b9e7-0f28-4f73-90bf-af3bd53589f5",
+                  "value": "bb345724-3a21-4a85-88e3-486e31c981f6",
                   "argumentInfo": {
                     "argumentName": "approvalRequestId",
-                    "formattedValue": "\"da57b9e7-0f28-4f73-90bf-af3bd53589f5\""
+                    "formattedValue": "\"bb345724-3a21-4a85-88e3-486e31c981f6\""
                   }
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 24059
+              "durationInNanos": 37049
             },
             {
               "name": "$approvalStrategy approval strategy can be applied",
@@ -326,7 +326,7 @@
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 18779
+              "durationInNanos": 30648
             },
             {
               "name": "process continues",
@@ -340,7 +340,7 @@
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 24167
+              "durationInNanos": 37673
             },
             {
               "name": "process waits in $",
@@ -361,10 +361,10 @@
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 5053721
+              "durationInNanos": 9114149
             },
             {
-              "name": "task is completed with variables $variables",
+              "name": "task is completed with variables $",
               "words": [
                 {
                   "value": "When",
@@ -376,20 +376,12 @@
                 {
                   "value": "{\n  approvalDecision \u003d\u003e Untyped value \u0027APPROVE\u0027, isTransient \u003d false\n}",
                   "argumentInfo": {
-                    "argumentName": "variables",
-                    "formattedValue": "{\n  approvalDecision \u003d\u003e Untyped value \u0027APPROVE\u0027, isTransient \u003d false\n}"
-                  }
-                },
-                {
-                  "value": "true",
-                  "argumentInfo": {
-                    "argumentName": "continueIfAsync",
-                    "formattedValue": "true"
+                    "argumentName": "variables"
                   }
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 29582713
+              "durationInNanos": 65602720
             },
             {
               "name": "process is finished",
@@ -403,7 +395,7 @@
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 23621
+              "durationInNanos": 47587
             },
             {
               "name": "process has passed element(s) $",
@@ -424,17 +416,17 @@
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 5281124
+              "durationInNanos": 7948086
             }
           ],
           "explicitArguments": [],
           "derivedArguments": [],
           "status": "SUCCESS",
           "success": true,
-          "durationInNanos": 87505328
+          "durationInNanos": 153540951
         }
       ],
-      "durationInNanos": 87505328,
+      "durationInNanos": 153540951,
       "executionStatus": "SUCCESS"
     },
     {
@@ -471,7 +463,7 @@
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 32559
+              "durationInNanos": 37608
             },
             {
               "name": "process is started for request",
@@ -484,15 +476,15 @@
                   "value": "process is started for request"
                 },
                 {
-                  "value": "a9aa5d7e-007e-4a0d-9f48-57fddaa9d126",
+                  "value": "cba0c2bb-683d-4e04-8b3d-f9b69406bcf5",
                   "argumentInfo": {
                     "argumentName": "approvalRequestId",
-                    "formattedValue": "\"a9aa5d7e-007e-4a0d-9f48-57fddaa9d126\""
+                    "formattedValue": "\"cba0c2bb-683d-4e04-8b3d-f9b69406bcf5\""
                   }
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 30791
+              "durationInNanos": 39131
             },
             {
               "name": "$approvalStrategy approval strategy can be applied",
@@ -513,7 +505,7 @@
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 765147
+              "durationInNanos": 1015881
             },
             {
               "name": "process continues",
@@ -527,7 +519,7 @@
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 13717436
+              "durationInNanos": 28015092
             },
             {
               "name": "process waits in $",
@@ -548,7 +540,7 @@
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 21043
+              "durationInNanos": 41609
             },
             {
               "name": "external task exists on topic $topicName",
@@ -569,17 +561,17 @@
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 2671526
+              "durationInNanos": 4570592
             }
           ],
           "explicitArguments": [],
           "derivedArguments": [],
           "status": "SUCCESS",
           "success": true,
-          "durationInNanos": 55241903
+          "durationInNanos": 60830837
         }
       ],
-      "durationInNanos": 55241903,
+      "durationInNanos": 60830837,
       "executionStatus": "SUCCESS"
     },
     {
@@ -598,7 +590,7 @@
               "name": "process $ is deployed",
               "words": [
                 {
-                  "value": "Given",
+                  "value": "Then",
                   "isIntroWord": true
                 },
                 {
@@ -616,17 +608,17 @@
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 14848346
+              "durationInNanos": 4624602
             }
           ],
           "explicitArguments": [],
           "derivedArguments": [],
           "status": "SUCCESS",
           "success": true,
-          "durationInNanos": 15378914
+          "durationInNanos": 5106745
         }
       ],
-      "durationInNanos": 15378914,
+      "durationInNanos": 5106745,
       "executionStatus": "SUCCESS"
     },
     {
@@ -663,7 +655,7 @@
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 26141
+              "durationInNanos": 41722
             },
             {
               "name": "process is started for request",
@@ -676,15 +668,15 @@
                   "value": "process is started for request"
                 },
                 {
-                  "value": "5084dab8-d31e-4196-8b67-29d14010d408",
+                  "value": "c8f09a3d-a0a8-4139-b42a-868e0faae9df",
                   "argumentInfo": {
                     "argumentName": "approvalRequestId",
-                    "formattedValue": "\"5084dab8-d31e-4196-8b67-29d14010d408\""
+                    "formattedValue": "\"c8f09a3d-a0a8-4139-b42a-868e0faae9df\""
                   }
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 32385
+              "durationInNanos": 31241
             },
             {
               "name": "$approvalStrategy approval strategy can be applied",
@@ -705,7 +697,7 @@
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 22130
+              "durationInNanos": 22870
             },
             {
               "name": "process continues",
@@ -719,7 +711,7 @@
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 28558
+              "durationInNanos": 31445
             },
             {
               "name": "process waits in $",
@@ -740,7 +732,7 @@
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 28601
+              "durationInNanos": 32565
             },
             {
               "name": "task\u0027s priority is between $lower and $upper",
@@ -771,7 +763,7 @@
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 27571
+              "durationInNanos": 31507
             },
             {
               "name": "task\u0027s follow-up date is $ after its creation",
@@ -795,10 +787,10 @@
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 13667425
+              "durationInNanos": 14480215
             },
             {
-              "name": "task is completed with variables $variables",
+              "name": "task is completed with variables $",
               "words": [
                 {
                   "value": "When",
@@ -810,20 +802,12 @@
                 {
                   "value": "{\n  approvalDecision \u003d\u003e Untyped value \u0027REJECT\u0027, isTransient \u003d false\n}",
                   "argumentInfo": {
-                    "argumentName": "variables",
-                    "formattedValue": "{\n  approvalDecision \u003d\u003e Untyped value \u0027REJECT\u0027, isTransient \u003d false\n}"
-                  }
-                },
-                {
-                  "value": "true",
-                  "argumentInfo": {
-                    "argumentName": "continueIfAsync",
-                    "formattedValue": "true"
+                    "argumentName": "variables"
                   }
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 24926531
+              "durationInNanos": 35439567
             },
             {
               "name": "process is finished",
@@ -837,7 +821,7 @@
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 27179
+              "durationInNanos": 41350
             },
             {
               "name": "process has passed element(s) $",
@@ -858,17 +842,17 @@
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 3181032
+              "durationInNanos": 4222868
             }
           ],
           "explicitArguments": [],
           "derivedArguments": [],
           "status": "SUCCESS",
           "success": true,
-          "durationInNanos": 101542515
+          "durationInNanos": 114821744
         }
       ],
-      "durationInNanos": 101542515,
+      "durationInNanos": 114821744,
       "executionStatus": "SUCCESS"
     },
     {
@@ -905,7 +889,7 @@
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 26937
+              "durationInNanos": 35922
             },
             {
               "name": "process is started for request",
@@ -918,15 +902,15 @@
                   "value": "process is started for request"
                 },
                 {
-                  "value": "99df2cbc-3589-41eb-bcb4-9656ee395ca2",
+                  "value": "7535f1cd-a048-4af2-87d7-35949f38ec90",
                   "argumentInfo": {
                     "argumentName": "approvalRequestId",
-                    "formattedValue": "\"99df2cbc-3589-41eb-bcb4-9656ee395ca2\""
+                    "formattedValue": "\"7535f1cd-a048-4af2-87d7-35949f38ec90\""
                   }
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 37797
+              "durationInNanos": 32233
             },
             {
               "name": "$approvalStrategy approval strategy can be applied",
@@ -947,7 +931,7 @@
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 29832
+              "durationInNanos": 26797
             },
             {
               "name": "process continues",
@@ -961,7 +945,7 @@
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 13959641
+              "durationInNanos": 18779952
             },
             {
               "name": "automatic approval returns",
@@ -982,7 +966,7 @@
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 13679449
+              "durationInNanos": 20164772
             },
             {
               "name": "process is finished",
@@ -996,7 +980,7 @@
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 28580
+              "durationInNanos": 30180
             },
             {
               "name": "process has passed element(s) $",
@@ -1017,17 +1001,17 @@
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 2686959
+              "durationInNanos": 4622831
             }
           ],
           "explicitArguments": [],
           "derivedArguments": [],
           "status": "SUCCESS",
           "success": true,
-          "durationInNanos": 59687318
+          "durationInNanos": 70815681
         }
       ],
-      "durationInNanos": 59687318,
+      "durationInNanos": 70815681,
       "executionStatus": "SUCCESS"
     }
   ],
