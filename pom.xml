@@ -15,13 +15,13 @@
 
 
   <properties>
-    <camunda.version>7.14.0</camunda.version>
-    <jgiven.version>0.18.2</jgiven.version>
+    <camunda.version>7.15.0</camunda.version>
+    <jgiven.version>1.0.0</jgiven.version>
     <junit.version>4.13.1</junit.version>
     <assertj.version>3.16.1</assertj.version>
-    <camunda-bpm-assert.version>8.0.0</camunda-bpm-assert.version>
-    <java.version>1.8</java.version>
-    <kotlin.version>1.4.10</kotlin.version>
+    <camunda-bpm-assert.version>10.0.0</camunda-bpm-assert.version>
+    <java.version>11</java.version>
+    <kotlin.version>1.4.31</kotlin.version>
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
     <kotlin-logging.version>2.0.3</kotlin-logging.version>
     <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
@@ -108,6 +108,31 @@
 
     <pluginManagement>
       <plugins>
+        <!-- Enforce correct Java and Maven -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-enforcer-plugin</artifactId>
+          <version>3.0.0-M3</version>
+          <executions>
+            <execution>
+              <id>enforce-maven</id>
+              <goals>
+                <goal>enforce</goal>
+              </goals>
+              <configuration>
+                <rules>
+                  <requireMavenVersion>
+                    <version>3.6.0</version>
+                  </requireMavenVersion>
+                  <requireJavaVersion>
+                    <version>11</version>
+                  </requireJavaVersion>
+                </rules>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+
         <plugin>
           <!-- cleaning -->
           <groupId>org.apache.maven.plugins</groupId>
