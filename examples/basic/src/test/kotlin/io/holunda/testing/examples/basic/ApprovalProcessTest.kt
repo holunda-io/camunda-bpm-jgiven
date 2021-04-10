@@ -140,7 +140,7 @@ open class ApprovalProcessTest : ScenarioTest<ApprovalProcessActionStage, Approv
         whenever()
             .task_is_completed_with_variables(
                 putValue(ApprovalProcessBean.Variables.APPROVAL_DECISION, Expressions.ApprovalDecision.REJECT),
-                continueIfAsync = true
+                isAsyncAfter = true
             )
 
         then()
@@ -169,7 +169,7 @@ open class ApprovalProcessTest : ScenarioTest<ApprovalProcessActionStage, Approv
         whenever()
             .task_is_completed_with_variables(
                 putValue(ApprovalProcessBean.Variables.APPROVAL_DECISION, Expressions.ApprovalDecision.APPROVE),
-                continueIfAsync = true
+                isAsyncAfter = true
             )
 
         then()
