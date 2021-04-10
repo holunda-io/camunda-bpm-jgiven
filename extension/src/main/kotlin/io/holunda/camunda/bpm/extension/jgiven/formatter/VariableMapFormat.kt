@@ -4,12 +4,18 @@ import com.tngtech.jgiven.annotation.Table
 import com.tngtech.jgiven.config.FormatterConfiguration
 import com.tngtech.jgiven.format.DefaultFormatter
 import com.tngtech.jgiven.format.ObjectFormatter
-import com.tngtech.jgiven.format.table.*
+import com.tngtech.jgiven.format.table.DefaultTableFormatter
+import com.tngtech.jgiven.format.table.RowFormatter
+import com.tngtech.jgiven.format.table.RowFormatterFactory
+import com.tngtech.jgiven.format.table.TableFormatterFactory
 import com.tngtech.jgiven.report.model.DataTable
 import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.value.TypedValue
 
 
+/**
+ * Marker to render process variables.
+ */
 @MustBeDocumented
 @Table(
     formatter = VariableMapTableFormatter.Factory::class,
@@ -21,8 +27,16 @@ import org.camunda.bpm.engine.variable.value.TypedValue
 @Target(AnnotationTarget.VALUE_PARAMETER, AnnotationTarget.ANNOTATION_CLASS, AnnotationTarget.FIELD)
 annotation class VariableMapFormat
 
+/**
+ * Formatter for process variables.
+ * @param formatterConfiguration config.
+ * @param objectFormatter formatter for single objects.
+ */
 class VariableMapTableFormatter(formatterConfiguration: FormatterConfiguration, objectFormatter: ObjectFormatter<*>) : DefaultTableFormatter(formatterConfiguration, objectFormatter) {
 
+    /**
+     * Factory.
+     */
     class Factory : TableFormatterFactory {
         override fun create(formatterConfiguration: FormatterConfiguration, objectFormatter: ObjectFormatter<*>) = VariableMapTableFormatter(formatterConfiguration, objectFormatter)
     }
@@ -36,8 +50,15 @@ class VariableMapTableFormatter(formatterConfiguration: FormatterConfiguration, 
     }
 }
 
+/**
+ * Formatter for single row, which is <code>Map.Entry</code>
+ * @param tableAnnotation for column setup.
+ */
 class EntryRowFormatter(private val tableAnnotation: Table) : RowFormatter() {
 
+    /**
+     * Object formatter.
+     */
     private val formatter: ObjectFormatter<Any> = DefaultFormatter.INSTANCE
 
     override fun header(): MutableList<String> {
@@ -62,17 +83,12 @@ class EntryRowFormatter(private val tableAnnotation: Table) : RowFormatter() {
         return columns
     }
 
+    /**
+     * Factory.
+     */
     class Factory : RowFormatterFactory {
         override fun create(parameterType: Class<*>, parameterName: String, tableAnnotation: Table, annotations: Array<out Annotation>, configuration: FormatterConfiguration, objectFormatter: ObjectFormatter<*>): RowFormatter {
             return EntryRowFormatter(tableAnnotation)
         }
     }
-
-}
-
-class EntryRowFormatterFactory : RowFormatterFactory {
-    override fun create(parameterType: Class<*>?, parameterName: String?, tableAnnotation: Table?, annotations: Array<out Annotation>?, configuration: FormatterConfiguration?, objectFormatter: ObjectFormatter<*>?): RowFormatter {
-        return FieldBasedRowFormatter.Factory().create(parameterType, parameterName, tableAnnotation, annotations, configuration, objectFormatter)
-    }
-
 }

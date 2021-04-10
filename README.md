@@ -28,7 +28,7 @@ Add the following dependency to your Maven pom:
     <dependency>
       <groupId>io.holunda.testing</groupId>
       <artifactId>camunda-bpm-jgiven</artifactId>
-      <version>0.0.6</version>
+      <version>0.0.7</version>
       <scope>test</scope>
     </dependency>
 
@@ -129,5 +129,6 @@ on `master` branch. Don't forget to close and release repository on https://oss.
 * [Simon Sprünker](https://github.com/srsp)
 * [Jan Galinski](https://github.com/jangalinski)
 * [Andre Hegerath](https://github.com/a-hegerath)
+* [Stefan Zilske](https://github.com/stefanzilske)
 
 

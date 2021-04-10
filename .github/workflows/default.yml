@@ -13,14 +13,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        jdk: ['1.8', '11.0.5']
+        jdk: ['11.0.5']
     steps:
       - name: Checkout code
         uses: actions/checkout@v1
-      - name: Set up JDK
-        uses: actions/setup-java@v1
-        with:
-          java-version: ${{ matrix.jdk }}
       - name: Cache .m2
         uses: actions/cache@v1
         with:
@@ -28,6 +24,10 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.jdk }}
       - name: Prepare Maven Wrapper
         run: chmod +x ./mvnw
       - name: Build with Maven
