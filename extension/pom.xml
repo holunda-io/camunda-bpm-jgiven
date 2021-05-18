@@ -28,6 +28,10 @@
       <artifactId>jgiven-html5-report</artifactId>
       <version>${jgiven.version}</version>
     </dependency>
+    <dependency>
+      <groupId>io.toolisticon.testing</groupId>
+      <artifactId>jgiven-kotlin</artifactId>
+    </dependency>
 
     <!-- This is a test library not a BOM, trying to avoid transitive dependencies -->
     <dependency>
