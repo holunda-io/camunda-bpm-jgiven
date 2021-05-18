@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.testing</groupId>
     <artifactId>camunda-bpm-jgiven-examples</artifactId>
-    <version>0.0.7</version>
+    <version>0.0.8</version>
   </parent>
 
   <artifactId>camunda-bpm-jgiven-examples-basic</artifactId>
@@ -24,7 +24,7 @@
     <dependency>
       <groupId>org.camunda.bpm.extension.mockito</groupId>
       <artifactId>camunda-bpm-mockito</artifactId>
-      <version>4.13.0</version>
+      <version>5.15.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -50,7 +50,7 @@
     <dependency>
       <groupId>org.camunda.bpm.extension</groupId>
       <artifactId>camunda-bpm-process-test-coverage</artifactId>
-      <version>0.3.2</version>
+      <version>0.4.0</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
