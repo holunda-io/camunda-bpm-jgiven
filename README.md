@@ -24,7 +24,7 @@ by providing a nice API and later generating reports which are human-readable.
 
 Add the following dependency to your Maven pom:
 
-``xml
+```xml
 <dependency>
   <groupId>io.holunda.testing</groupId>
   <artifactId>camunda-bpm-jgiven</artifactId>
