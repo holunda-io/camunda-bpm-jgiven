@@ -21,7 +21,7 @@ import org.camunda.bpm.extension.mockito.CamundaMockito.registerJavaDelegateMock
 
 @JGivenProcessStage
 class ApprovalProcessActionStage : ProcessStage<ApprovalProcessActionStage, ApprovalProcessBean>() {
-  
+
   @BeforeStage
   fun mock_all_delegates() {
     registerJavaDelegateMock(DETERMINE_APPROVAL_STRATEGY)
