@@ -18,7 +18,7 @@
     <camunda.version>7.15.0</camunda.version>
     <jgiven.version>1.0.0</jgiven.version>
     <junit.version>4.13.2</junit.version>
-    <assertj.version>3.19.0</assertj.version>
+    <assertj.version>3.20.2</assertj.version>
     <camunda-bpm-assert.version>10.0.0</camunda-bpm-assert.version>
     <jgiven-kotlin.version>1.0.1</jgiven-kotlin.version>
 
