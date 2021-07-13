@@ -23,7 +23,7 @@
     <jgiven-kotlin.version>1.0.1</jgiven-kotlin.version>
 
     <java.version>11</java.version>
-    <kotlin.version>1.5.10</kotlin.version>
+    <kotlin.version>1.5.21</kotlin.version>
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
     <kotlin-logging.version>2.0.3</kotlin-logging.version>
     <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
