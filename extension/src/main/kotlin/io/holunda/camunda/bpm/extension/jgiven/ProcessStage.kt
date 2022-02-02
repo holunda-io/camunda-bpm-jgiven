@@ -75,6 +75,58 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
   }
 
   /**
+   * Checks if the process instance is waiting in all activities with specified ids.
+   * @param activityId definition id.
+   * @return fluent stage.
+   */
+  @As("process waits in activities $")
+  fun process_waits_in(@QuotedVarargs vararg activityId: String) = step {
+    require(activityId.isNotEmpty()) { "At least one activity id must be provided" }
+    activityId.map {
+      val job = job(it)
+      assertThat(job).`as`("Expecting the process to be waiting in activity '$it', but it was not.").isNotNull
+    }
+  }
+
+  /**
+   * Checks if the process instance is waiting to receive all events in activities with specified ids.
+   * @param activityId definition id.
+   * @return fluent stage.
+   */
+  fun process_waits_for(@QuotedVarargs vararg activityId: String) = step {
+    require(activityId.isNotEmpty()) { "At least one activity id must be provided" }
+    val activityIdOfActiveEventSubscriptions =
+      runtimeService().createEventSubscriptionQuery().list().map { it.activityId }
+    assertThat(activityIdOfActiveEventSubscriptions)
+      .`as`(
+        "Expecting the process to wait for events in activity ${
+          activityId.joinToString(", ")
+        }, but it was waiting in ${
+          activityIdOfActiveEventSubscriptions.joinToString(", ")
+        }"
+      )
+      .containsExactlyInAnyOrder(*activityId)
+  }
+
+  /**
+   * Executes current job.
+   * @return fluent stage.
+   */
+  @As("process continues")
+  fun process_continues(): SELF = step {
+    job_is_executed()
+  }
+
+  /**
+   * Executes jobs named by the activities the current execution is waiting at.
+   * @param activityId activities the execution is waiting at.
+   * @return fluent stage.
+   */
+  @As("process continues")
+  fun process_continues(vararg activityId: String) = job_is_executed(*activityId)
+
+
+  /**
    * Asserts that the process is deployed.
    * @param processDefinitionKey process definition key.
    * @return fluent stage.
@@ -88,7 +140,6 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
         .latestVersion()
         .singleResult()
     ).isNotNull
-
   }
 
   /**
@@ -275,7 +326,7 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
       assertThat(processInstanceSupplier.get())
         .`as`("Expecting the task to be marked as async after and continue on complete.")
         .isWaitingAt(taskDefinitionKey)
-      execute(job())
+      job_is_executed(taskDefinitionKey)
     }
   }
 
@@ -289,6 +340,7 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
 
   /**
    * Executes current job.
+   * Be careful, this method will fail if more than one job is in place.
    * @return fluent stage.
    */
   fun job_is_executed(): SELF = step {
@@ -297,13 +349,17 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
   }
 
   /**
-   * Executes current job.
+   * Executes the jobs waiting in activities provided.
+   * @param activityId id of the activity the job is waiting in.
    * @return fluent stage.
    */
-  @As("process continues")
-  fun process_continues(): SELF = step {
-    assertThat(processInstanceSupplier.get()).isNotNull
-    execute(job())
+  fun job_is_executed(vararg activityId: String) = step {
+    require(activityId.isNotEmpty()) { "At least one activity id must be provided" }
+    activityId.map {
+      val job = job(it)
+      assertThat(job).`as`("Expecting the process to be waiting in activity '$it', but it was not.").isNotNull
+      execute(job)
+    }
   }
 
   /**
