@@ -6,18 +6,19 @@
   <parent>
     <groupId>io.holunda.testing</groupId>
     <artifactId>camunda-bpm-jgiven-parent</artifactId>
-    <version>0.0.8</version>
+    <version>0.2.0</version>
   </parent>
 
   <artifactId>camunda-bpm-jgiven-examples</artifactId>
   <packaging>pom</packaging>
 
   <properties>
-    <spring-boot.version>2.4.5</spring-boot.version>
+    <spring-boot.version>2.6.4</spring-boot.version>
   </properties>
 
   <modules>
     <module>basic</module>
+    <module>basic-junit5</module>
   </modules>
 
   <dependencyManagement>

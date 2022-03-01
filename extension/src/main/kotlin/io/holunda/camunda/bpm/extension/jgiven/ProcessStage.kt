@@ -7,12 +7,15 @@ import io.holunda.camunda.bpm.extension.jgiven.formatter.QuotedVarargs
 import io.holunda.camunda.bpm.extension.jgiven.formatter.VariableMapFormat
 import io.toolisticon.testing.jgiven.step
 import org.assertj.core.api.Assertions.*
+import org.camunda.bpm.engine.ProcessEngine
+import org.camunda.bpm.engine.impl.persistence.entity.TimerEntity
+import org.camunda.bpm.engine.impl.util.ClockUtil
 import org.camunda.bpm.engine.runtime.ProcessInstance
-import org.camunda.bpm.engine.test.ProcessEngineRule
 import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*
 import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables.createVariables
 import java.time.Period
+import java.time.temporal.ChronoUnit
 import java.util.*
 import java.util.function.Supplier
 
@@ -56,7 +59,7 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
    * Process engine to work on.
    */
   @ExpectedScenarioState(required = true)
-  lateinit var camunda: ProcessEngineRule
+  lateinit var camunda: ProcessEngine
 
   /**
    * Instance supplier.
@@ -75,6 +78,58 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
   }
 
   /**
+   * Checks if the process instance is waiting in all activities with specified ids.
+   * @param activityId definition id.
+   * @return fluent stage.
+   */
+  @As("process waits in activities $")
+  fun process_waits_in(@QuotedVarargs vararg activityId: String) = step {
+    require(activityId.isNotEmpty()) { "At least one activity id must be provided" }
+    activityId.map {
+      val job = job(it)
+      assertThat(job).`as`("Expecting the process to be waiting in activity '$it', but it was not.").isNotNull
+    }
+  }
+
+  /**
+   * Checks if the process instance is waiting to receive all events in activities with specified ids.
+   * @param activityId definition id.
+   * @return fluent stage.
+   */
+  fun process_waits_for(@QuotedVarargs vararg activityId: String) = step {
+    require(activityId.isNotEmpty()) { "At least one activity id must be provided" }
+    val activityIdOfActiveEventSubscriptions =
+      runtimeService().createEventSubscriptionQuery().list().map { it.activityId }
+    assertThat(activityIdOfActiveEventSubscriptions)
+      .`as`(
+        "Expecting the process to wait for events in activity ${
+          activityId.joinToString(", ")
+        }, but it was waiting in ${
+          activityIdOfActiveEventSubscriptions.joinToString(", ")
+        }"
+      )
+      .containsExactlyInAnyOrder(*activityId)
+  }
+
+  /**
+   * Executes current job.
+   * @return fluent stage.
+   */
+  @As("process continues")
+  fun process_continues(): SELF = step {
+    job_is_executed()
+  }
+
+  /**
+   * Executes jobs named by the activities the current execution is waiting at.
+   * @param activityId activities the execution is waiting at.
+   * @return fluent stage.
+   */
+  @As("process continues")
+  fun process_continues(vararg activityId: String) = job_is_executed(*activityId)
+
+
+  /**
    * Asserts that the process is deployed.
    * @param processDefinitionKey process definition key.
    * @return fluent stage.
@@ -88,7 +143,6 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
         .latestVersion()
         .singleResult()
     ).isNotNull
-
   }
 
   /**
@@ -240,11 +294,23 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
    * @param variableName name of the variable.
    * @return fluent stage.
    */
-  @As("variables $ are not present")
-  fun variable_is_not_present(@QuotedVarargs vararg variableName: String): SELF = step {
+  @As("variable $ is not present")
+  fun variable_is_not_present(@QuotedVarargs variableName: String): SELF = step {
     assertThat(processInstanceSupplier.get())
       .`as`("variable $variableName should not be present")
-      .variables().doesNotContainKeys(*variableName)
+      .variables().doesNotContainKeys(variableName)
+  }
+
+  /**
+   * Asserts that variable are not set.
+   * @param variableNames names of the variables.
+   * @return fluent stage.
+   */
+  @As("variables $ are not present")
+  fun variables_are_not_present(@QuotedVarargs variableNames: Array<String>): SELF = step {
+    assertThat(processInstanceSupplier.get())
+      .`as`("variables ${variableNames.joinToString(", ")} should not be present")
+      .variables().doesNotContainKeys(*variableNames)
   }
 
   /**
@@ -275,7 +341,7 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
       assertThat(processInstanceSupplier.get())
         .`as`("Expecting the task to be marked as async after and continue on complete.")
         .isWaitingAt(taskDefinitionKey)
-      execute(job())
+      job_is_executed(taskDefinitionKey)
     }
   }
 
@@ -289,6 +355,7 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
 
   /**
    * Executes current job.
+   * Be careful, this method will fail if more than one job is in place.
    * @return fluent stage.
    */
   fun job_is_executed(): SELF = step {
@@ -297,13 +364,65 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
   }
 
   /**
-   * Executes current job.
+   * Executes the jobs waiting in activities provided.
+   * @param activityId id of the activity the job is waiting in.
    * @return fluent stage.
    */
-  @As("process continues")
-  fun process_continues(): SELF = step {
-    assertThat(processInstanceSupplier.get()).isNotNull
-    execute(job())
+  fun job_is_executed(vararg activityId: String) = step {
+    require(activityId.isNotEmpty()) { "At least one activity id must be provided" }
+    activityId.map {
+      val job = job(it)
+      assertThat(job).`as`("Expecting the process to be waiting in activity '$it', but it was not.").isNotNull
+      execute(job)
+    }
+  }
+
+  /**
+   * Asserts that the instance is waiting for the timer to be executed on the expected time.
+   * @param timerActivityId activity id of the timer.
+   * @param expectedDate expected data truncated to minute.
+   * @return fluent stage.
+   */
+  fun timer_is_waiting_until(timerActivityId: String, expectedDate: Date) = step {
+
+    val truncatedToMinutes = Date.from(expectedDate.toInstant().truncatedTo(ChronoUnit.MINUTES))
+
+    val timerJobs = managementService()
+      .createJobDefinitionQuery()
+      .activityIdIn(timerActivityId)
+      .list()
+      .mapNotNull { jobDefinition ->
+        managementService()
+          .createJobQuery()
+          .jobDefinitionId(jobDefinition.id)
+          .singleResult()
+      }.filterIsInstance<TimerEntity>()
+
+    assertThat(timerJobs).`as`("Expected one instance waiting in $timerActivityId, but found ${timerJobs.size}.").hasSize(1)
+    assertThat(timerJobs[0]).hasDueDate(truncatedToMinutes)
+  }
+
+  /**
+   * Sets engine time to new value and triggers the timer job execution.
+   * @param timerActivityId activity id of timer event.
+   * @param targetTime time to set engine time to.
+   * @return fluent stage.
+   */
+  fun time_passes(timerActivityId: String, targetTime: Date) = step {
+    ClockUtil.setCurrentTime(targetTime)
+
+    val timerJobs = managementService()
+      .createJobDefinitionQuery()
+      .activityIdIn(timerActivityId)
+      .list()
+      .mapNotNull { jobDefinition ->
+        managementService()
+          .createJobQuery()
+          .jobDefinitionId(jobDefinition.id)
+          .singleResult()
+      }.filterIsInstance<TimerEntity>()
+    assertThat(timerJobs).`as`("Expected one instance waiting in $timerActivityId, but found ${timerJobs.size}.").hasSize(1)
+    job_is_executed(timerActivityId)
   }
 
   /**
@@ -376,14 +495,14 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
 
     // exactly one subscription
     assertThat(
-      camunda.processEngine.runtimeService
+      camunda.runtimeService
         .createEventSubscriptionQuery()
         .processInstanceId(processInstanceSupplier.get().processInstanceId)
         .eventType("message")
         .eventName(messageName).count()
     ).isEqualTo(1)
 
-    camunda.processEngine.runtimeService
+    camunda.runtimeService
       .createMessageCorrelation(messageName)
       .setVariables(variables)
       .correlate()

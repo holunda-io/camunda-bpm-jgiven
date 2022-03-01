@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <include resource="org/springframework/boot/logging/logback/base.xml" />
+
+  <logger name="org.springframework" level="INFO"/>
+
+  <logger name="org.apache.ibatis.transaction" level="OFF"/>
+  <logger name="org.camunda.bpm.engine.persistence" level="OFF"/>
+  <logger name="org.camunda.spin" level="ERROR" />
+  <logger name="org.camunda.bpm.engine.cfg" level="WARN" />
+  <logger name="org.camunda.bpm.engine" level="WARN" />
+
+</configuration>

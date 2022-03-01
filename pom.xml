@@ -5,7 +5,7 @@
 
   <groupId>io.holunda.testing</groupId>
   <artifactId>camunda-bpm-jgiven-parent</artifactId>
-  <version>0.0.8</version>
+  <version>0.2.0</version>
   <packaging>pom</packaging>
 
 
@@ -15,17 +15,16 @@
 
 
   <properties>
-    <camunda.version>7.15.0</camunda.version>
-    <jgiven.version>1.0.0</jgiven.version>
+    <camunda.version>7.16.0</camunda.version>
+    <jgiven.version>1.2.0</jgiven.version>
     <junit.version>4.13.2</junit.version>
     <assertj.version>3.19.0</assertj.version>
-    <camunda-bpm-assert.version>10.0.0</camunda-bpm-assert.version>
-    <jgiven-kotlin.version>1.0.0</jgiven-kotlin.version>
+    <camunda-bpm-assert.version>13.0.0</camunda-bpm-assert.version>
+    <jgiven-kotlin.version>1.0.1</jgiven-kotlin.version>
 
     <java.version>11</java.version>
-    <kotlin.version>1.5.0</kotlin.version>
+    <kotlin.version>1.6.10</kotlin.version>
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
-    <kotlin-logging.version>2.0.3</kotlin-logging.version>
     <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
@@ -124,7 +123,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-enforcer-plugin</artifactId>
-          <version>3.0.0-M3</version>
+          <version>3.0.0</version>
           <executions>
             <execution>
               <id>enforce-maven</id>
@@ -156,7 +155,7 @@
           <!-- java compiler -->
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.8.1</version>
+          <version>3.10.0</version>
           <configuration>
             <encoding>UTF-8</encoding>
             <source>${java.version}</source>
@@ -204,7 +203,7 @@
           <!-- git flow -->
           <groupId>com.amashchenko.maven.plugin</groupId>
           <artifactId>gitflow-maven-plugin</artifactId>
-          <version>1.16.0</version>
+          <version>1.18.0</version>
           <configuration>
             <gitFlowConfig>
               <productionBranch>master</productionBranch>
@@ -227,6 +226,9 @@
           <groupId>org.jetbrains.kotlin</groupId>
           <version>${kotlin.version}</version>
           <configuration>
+            <jvmTarget>${java.version}</jvmTarget>
+            <languageVersion>1.5</languageVersion>
+            <apiVersion>1.5</apiVersion>
             <compilerPlugins>
               <plugin>spring</plugin>
               <plugin>jpa</plugin>
@@ -237,7 +239,6 @@
               <!-- Each annotation is placed on its own line -->
               <option>all-open:annotation=io.holunda.camunda.bpm.extension.jgiven.JGivenProcessStage</option>
             </pluginOptions>
-            <jvmTarget>${java.version}</jvmTarget>
           </configuration>
           <executions>
             <execution>
@@ -298,7 +299,7 @@
           <!-- javadoc for kotlin -->
           <groupId>org.jetbrains.dokka</groupId>
           <artifactId>dokka-maven-plugin</artifactId>
-          <version>1.4.32</version>
+          <version>1.6.10</version>
           <executions>
             <execution>
               <phase>test</phase>
@@ -314,7 +315,7 @@
           <!-- source from kotlin -->
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>build-helper-maven-plugin</artifactId>
-          <version>3.2.0</version>
+          <version>3.3.0</version>
           <executions>
             <execution>
               <phase>generate-sources</phase>
@@ -377,7 +378,7 @@
         <!-- Deploy -->
         <plugin>
           <artifactId>maven-deploy-plugin</artifactId>
-          <version>3.0.0-M1</version>
+          <version>3.0.0-M2</version>
           <configuration>
             <skip>true</skip>
           </configuration>
@@ -385,7 +386,7 @@
         <plugin>
           <groupId>org.sonatype.plugins</groupId>
           <artifactId>nexus-staging-maven-plugin</artifactId>
-          <version>1.6.8</version>
+          <version>1.6.12</version>
           <executions>
             <execution>
               <id>default-deploy</id>
