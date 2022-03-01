@@ -31,7 +31,7 @@ class ApprovalProcessActionStage : ProcessStage<ApprovalProcessActionStage, Appr
   }
 
   fun process_is_started_for_request(@Quoted approvalRequestId: String) = step {
-    processInstanceSupplier = ApprovalProcessBean(camunda.processEngine)
+    processInstanceSupplier = ApprovalProcessBean(camunda)
     processInstanceSupplier.start(approvalRequestId)
     assertThat(processInstanceSupplier.processInstance).isNotNull
     assertThat(processInstanceSupplier.processInstance).isStarted

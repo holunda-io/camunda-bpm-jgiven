@@ -21,14 +21,11 @@ import java.util.*
 @Deployment(resources = [ApprovalProcessBean.RESOURCE])
 open class ApprovalProcessTest : ScenarioTest<ApprovalProcessActionStage, ApprovalProcessActionStage, ApprovalProcessThenStage>() {
 
-  companion object {
-    val processEngineRule: ProcessEngineRule = StandaloneInMemoryTestConfiguration().rule()
-  }
-
   @get: Rule
-  @ScenarioState
-  val camunda: ProcessEngineRule = processEngineRule
+  val rule: ProcessEngineRule = StandaloneInMemoryTestConfiguration().rule()
 
+  @ScenarioState
+  val camunda = rule.processEngine
 
   @Test
   fun `should deploy`() {

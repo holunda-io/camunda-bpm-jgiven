@@ -7,8 +7,8 @@ import io.holunda.camunda.bpm.extension.jgiven.formatter.QuotedVarargs
 import io.holunda.camunda.bpm.extension.jgiven.formatter.VariableMapFormat
 import io.toolisticon.testing.jgiven.step
 import org.assertj.core.api.Assertions.*
+import org.camunda.bpm.engine.ProcessEngine
 import org.camunda.bpm.engine.runtime.ProcessInstance
-import org.camunda.bpm.engine.test.ProcessEngineRule
 import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*
 import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables.createVariables
@@ -56,7 +56,7 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
    * Process engine to work on.
    */
   @ExpectedScenarioState(required = true)
-  lateinit var camunda: ProcessEngineRule
+  lateinit var camunda: ProcessEngine
 
   /**
    * Instance supplier.
@@ -432,14 +432,14 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
 
     // exactly one subscription
     assertThat(
-      camunda.processEngine.runtimeService
+      camunda.runtimeService
         .createEventSubscriptionQuery()
         .processInstanceId(processInstanceSupplier.get().processInstanceId)
         .eventType("message")
         .eventName(messageName).count()
     ).isEqualTo(1)
 
-    camunda.processEngine.runtimeService
+    camunda.runtimeService
       .createMessageCorrelation(messageName)
       .setVariables(variables)
       .correlate()
