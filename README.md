@@ -28,7 +28,7 @@ Add the following dependency to your Maven pom:
 <dependency>
   <groupId>io.holunda.testing</groupId>
   <artifactId>camunda-bpm-jgiven</artifactId>
-  <version>0.0.8</version>
+  <version>0.2.0</version>
   <scope>test</scope>
 </dependency>
 ```
@@ -39,29 +39,81 @@ Stages contain assert and action methods and may be subclassed. This library pro
 `ProcessStage` for building your process testing stages. Here is how the test then looks like
 (written in Kotlin):
 
+### JUnit4
+
 ```kotlin
-@Test
-fun `should automatically approve`() {
+@Deployment(resources = [ApprovalProcessBean.RESOURCE])
+open class ApprovalProcessTest : ScenarioTest<ApprovalProcessActionStage, ApprovalProcessActionStage, ApprovalProcessThenStage>() {
 
-  val approvalRequestId = UUID.randomUUID().toString()
+    @get: Rule 
+    val rule: ProcessEngineRule = StandaloneInMemoryTestConfiguration().rule()
 
-  GIVEN
-    .process_is_deployed(ApprovalProcessBean.KEY)
-    .AND
-    .process_is_started_for_request(approvalRequestId)
-    .AND
-    .approval_strategy_can_be_applied(Expressions.ApprovalStrategy.AUTOMATIC)
-    .AND
-    .automatic_approval_returns(Expressions.ApprovalDecision.APPROVE)
+    @ScenarioState
+    val camunda = rule.processEngine
 
-  WHEN
-    .process_continues()
+    @Test
+    internal fun `should automatically approve`() {
 
-  THEN
-    .process_is_finished()
-    .AND
-    .process_has_passed(Elements.SERVICE_AUTO_APPROVE, Elements.END_APPROVED)
+        val approvalRequestId = UUID.randomUUID().toString()
 
+        GIVEN
+            .process_is_deployed(ApprovalProcessBean.KEY)
+            .AND
+            .process_is_started_for_request(approvalRequestId)
+            .AND
+            .approval_strategy_can_be_applied(Expressions.ApprovalStrategy.AUTOMATIC)
+            .AND
+            .automatic_approval_returns(Expressions.ApprovalDecision.APPROVE)
+
+        WHEN
+            .process_continues()
+
+        THEN
+            .process_is_finished()
+            .AND
+            .process_has_passed(Elements.SERVICE_AUTO_APPROVE, Elements.END_APPROVED)
+
+    }
+}
+```
+
+### JUnit5
+
+```kotlin
+@ExtendWith(ProcessEngineExtension::class)
+@Deployment(resources = [ApprovalProcessBean.RESOURCE])
+internal class ApprovalProcessTest :
+  ScenarioTest<ApprovalProcessActionStage, ApprovalProcessActionStage, ApprovalProcessThenStage>() {
+
+    @RegisterExtension
+    val extension = TestProcessEngine.DEFAULT
+
+    @ScenarioState
+    val camunda = extension.processEngine
+
+    @Test
+    internal fun `should automatically approve`() {
+
+        val approvalRequestId = UUID.randomUUID().toString()
+
+        GIVEN
+            .process_is_deployed(ApprovalProcessBean.KEY)
+            .AND
+            .process_is_started_for_request(approvalRequestId)
+            .AND
+            .approval_strategy_can_be_applied(Expressions.ApprovalStrategy.AUTOMATIC)
+            .AND
+            .automatic_approval_returns(Expressions.ApprovalDecision.APPROVE)
+
+        WHEN
+            .process_continues()
+
+        THEN
+            .process_is_finished()
+            .AND
+            .process_has_passed(Elements.SERVICE_AUTO_APPROVE, Elements.END_APPROVED)
+
+    }
 }
 ```
 
