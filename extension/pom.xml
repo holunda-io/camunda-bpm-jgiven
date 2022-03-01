@@ -20,6 +20,11 @@
     </dependency>
     <dependency>
       <groupId>com.tngtech.jgiven</groupId>
+      <artifactId>jgiven-junit5</artifactId>
+      <version>${jgiven.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.tngtech.jgiven</groupId>
       <artifactId>jgiven-spring</artifactId>
       <version>${jgiven.version}</version>
     </dependency>

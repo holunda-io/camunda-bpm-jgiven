@@ -18,6 +18,7 @@
 
   <modules>
     <module>basic</module>
+    <module>basic-junit5</module>
   </modules>
 
   <dependencyManagement>
