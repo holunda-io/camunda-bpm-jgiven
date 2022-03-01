@@ -8,6 +8,8 @@ import io.holunda.camunda.bpm.extension.jgiven.formatter.VariableMapFormat
 import io.toolisticon.testing.jgiven.step
 import org.assertj.core.api.Assertions.*
 import org.camunda.bpm.engine.ProcessEngine
+import org.camunda.bpm.engine.impl.persistence.entity.TimerEntity
+import org.camunda.bpm.engine.impl.util.ClockUtil
 import org.camunda.bpm.engine.runtime.ProcessInstance
 import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*
 import org.camunda.bpm.engine.variable.VariableMap
