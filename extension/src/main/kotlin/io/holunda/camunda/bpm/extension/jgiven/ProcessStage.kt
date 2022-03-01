@@ -13,6 +13,7 @@ import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*
 import org.camunda.bpm.engine.variable.VariableMap
 import org.camunda.bpm.engine.variable.Variables.createVariables
 import java.time.Period
+import java.time.temporal.ChronoUnit
 import java.util.*
 import java.util.function.Supplier
 
@@ -291,11 +292,23 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
    * @param variableName name of the variable.
    * @return fluent stage.
    */
-  @As("variables $ are not present")
-  fun variable_is_not_present(@QuotedVarargs vararg variableName: String): SELF = step {
+  @As("variable $ is not present")
+  fun variable_is_not_present(@QuotedVarargs variableName: String): SELF = step {
     assertThat(processInstanceSupplier.get())
       .`as`("variable $variableName should not be present")
-      .variables().doesNotContainKeys(*variableName)
+      .variables().doesNotContainKeys(variableName)
+  }
+
+  /**
+   * Asserts that variable are not set.
+   * @param variableNames names of the variables.
+   * @return fluent stage.
+   */
+  @As("variables $ are not present")
+  fun variables_are_not_present(@QuotedVarargs variableNames: Array<String>): SELF = step {
+    assertThat(processInstanceSupplier.get())
+      .`as`("variables ${variableNames.joinToString(", ")} should not be present")
+      .variables().doesNotContainKeys(*variableNames)
   }
 
   /**
@@ -360,6 +373,54 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
       assertThat(job).`as`("Expecting the process to be waiting in activity '$it', but it was not.").isNotNull
       execute(job)
     }
+  }
+
+  /**
+   * Asserts that the instance is waiting for the timer to be executed on the expected time.
+   * @param timerActivityId activity id of the timer.
+   * @param expectedDate expected data truncated to minute.
+   * @return fluent stage.
+   */
+  fun timer_is_waiting_until(timerActivityId: String, expectedDate: Date) = step {
+
+    val truncatedToMinutes = Date.from(expectedDate.toInstant().truncatedTo(ChronoUnit.MINUTES))
+
+    val timerJobs = managementService()
+      .createJobDefinitionQuery()
+      .activityIdIn(timerActivityId)
+      .list()
+      .mapNotNull { jobDefinition ->
+        managementService()
+          .createJobQuery()
+          .jobDefinitionId(jobDefinition.id)
+          .singleResult()
+      }.filterIsInstance<TimerEntity>()
+
+    assertThat(timerJobs).`as`("Expected one instance waiting in $timerActivityId, but found ${timerJobs.size}.").hasSize(1)
+    assertThat(timerJobs[0]).hasDueDate(truncatedToMinutes)
+  }
+
+  /**
+   * Sets engine time to new value and triggers the timer job execution.
+   * @param timerActivityId activity id of timer event.
+   * @param targetTime time to set engine time to.
+   * @return fluent stage.
+   */
+  fun time_passes(timerActivityId: String, targetTime: Date) = step {
+    ClockUtil.setCurrentTime(targetTime)
+
+    val timerJobs = managementService()
+      .createJobDefinitionQuery()
+      .activityIdIn(timerActivityId)
+      .list()
+      .mapNotNull { jobDefinition ->
+        managementService()
+          .createJobQuery()
+          .jobDefinitionId(jobDefinition.id)
+          .singleResult()
+      }.filterIsInstance<TimerEntity>()
+    assertThat(timerJobs).`as`("Expected one instance waiting in $timerActivityId, but found ${timerJobs.size}.").hasSize(1)
+    job_is_executed(timerActivityId)
   }
 
   /**
