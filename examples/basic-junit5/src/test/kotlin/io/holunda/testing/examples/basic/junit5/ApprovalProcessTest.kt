@@ -1,7 +1,8 @@
-package io.holunda.testing.examples.basic
+package io.holunda.testing.examples.basic.junit5
 
 import com.tngtech.jgiven.annotation.ScenarioState
-import com.tngtech.jgiven.junit.ScenarioTest
+import com.tngtech.jgiven.junit5.ScenarioTest
+import io.holunda.testing.examples.basic.ApprovalProcessBean
 import io.holunda.testing.examples.basic.ApprovalProcessBean.Elements
 import io.holunda.testing.examples.basic.ApprovalProcessBean.Expressions
 import io.toolisticon.testing.jgiven.AND
@@ -9,32 +10,33 @@ import io.toolisticon.testing.jgiven.GIVEN
 import io.toolisticon.testing.jgiven.THEN
 import io.toolisticon.testing.jgiven.WHEN
 import org.camunda.bpm.engine.test.Deployment
-import org.camunda.bpm.engine.test.ProcessEngineRule
 import org.camunda.bpm.engine.variable.Variables.putValue
-import org.camunda.bpm.spring.boot.starter.test.helper.StandaloneInMemoryTestConfiguration
-import org.junit.Rule
-import org.junit.Test
+import org.camunda.bpm.extension.junit5.test.ProcessEngineExtension
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.api.extension.RegisterExtension
 import java.time.Period
 import java.util.*
 
-
+@ExtendWith(ProcessEngineExtension::class)
 @Deployment(resources = [ApprovalProcessBean.RESOURCE])
-open class ApprovalProcessTest : ScenarioTest<ApprovalProcessActionStage, ApprovalProcessActionStage, ApprovalProcessThenStage>() {
+internal class ApprovalProcessTest :
+  ScenarioTest<ApprovalProcessActionStage, ApprovalProcessActionStage, ApprovalProcessThenStage>() {
 
-  @get: Rule
-  val rule: ProcessEngineRule = StandaloneInMemoryTestConfiguration().rule()
+  @RegisterExtension
+  val extension = TestProcessEngine.DEFAULT
 
   @ScenarioState
-  val camunda = rule.processEngine
+  val camunda = extension.processEngine
 
   @Test
-  fun `should deploy`() {
+  internal fun `should deploy`() {
     THEN
       .process_is_deployed(ApprovalProcessBean.KEY)
   }
 
   @Test
-  fun `should start asynchronously`() {
+  internal fun `should start asynchronously`() {
 
     val approvalRequestId = UUID.randomUUID().toString()
 
@@ -47,7 +49,7 @@ open class ApprovalProcessTest : ScenarioTest<ApprovalProcessActionStage, Approv
   }
 
   @Test
-  fun `should wait for automatic approve`() {
+  internal fun `should wait for automatic approve`() {
 
     val approvalRequestId = UUID.randomUUID().toString()
 
@@ -69,7 +71,7 @@ open class ApprovalProcessTest : ScenarioTest<ApprovalProcessActionStage, Approv
   }
 
   @Test
-  fun `should automatic approve`() {
+  internal fun `should automatic approve`() {
 
     val approvalRequestId = UUID.randomUUID().toString()
 
@@ -94,7 +96,7 @@ open class ApprovalProcessTest : ScenarioTest<ApprovalProcessActionStage, Approv
 
 
   @Test
-  fun `should automatically reject`() {
+  internal fun `should automatically reject`() {
 
     val approvalRequestId = UUID.randomUUID().toString()
 
@@ -118,7 +120,7 @@ open class ApprovalProcessTest : ScenarioTest<ApprovalProcessActionStage, Approv
   }
 
   @Test
-  fun `should manually reject`() {
+  internal fun `should manually reject`() {
 
     val approvalRequestId = UUID.randomUUID().toString()
 
@@ -151,7 +153,7 @@ open class ApprovalProcessTest : ScenarioTest<ApprovalProcessActionStage, Approv
   }
 
   @Test
-  fun `should manually approve`() {
+  internal fun `should manually approve`() {
 
     val approvalRequestId = UUID.randomUUID().toString()
 

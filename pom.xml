@@ -5,7 +5,7 @@
 
   <groupId>io.holunda.testing</groupId>
   <artifactId>camunda-bpm-jgiven-parent</artifactId>
-  <version>0.0.9-SNAPSHOT</version>
+  <version>0.2.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
 
@@ -25,7 +25,6 @@
     <java.version>11</java.version>
     <kotlin.version>1.6.10</kotlin.version>
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
-    <kotlin-logging.version>2.0.3</kotlin-logging.version>
     <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
@@ -227,6 +226,9 @@
           <groupId>org.jetbrains.kotlin</groupId>
           <version>${kotlin.version}</version>
           <configuration>
+            <jvmTarget>${java.version}</jvmTarget>
+            <languageVersion>1.5</languageVersion>
+            <apiVersion>1.5</apiVersion>
             <compilerPlugins>
               <plugin>spring</plugin>
               <plugin>jpa</plugin>
@@ -237,7 +239,6 @@
               <!-- Each annotation is placed on its own line -->
               <option>all-open:annotation=io.holunda.camunda.bpm.extension.jgiven.JGivenProcessStage</option>
             </pluginOptions>
-            <jvmTarget>${java.version}</jvmTarget>
           </configuration>
           <executions>
             <execution>

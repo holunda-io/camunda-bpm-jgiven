@@ -1,15 +1,17 @@
-package io.holunda.testing.examples.basic
+package io.holunda.testing.examples.basic.junit5
 
 import com.tngtech.jgiven.annotation.As
 import com.tngtech.jgiven.annotation.BeforeStage
 import com.tngtech.jgiven.annotation.Quoted
 import io.holunda.camunda.bpm.extension.jgiven.JGivenProcessStage
 import io.holunda.camunda.bpm.extension.jgiven.ProcessStage
+import io.holunda.testing.examples.basic.ApprovalProcessBean
 import io.holunda.testing.examples.basic.ApprovalProcessBean.Expressions.APPROVE_REQUEST_TASK_LISTENER
 import io.holunda.testing.examples.basic.ApprovalProcessBean.Expressions.DETERMINE_APPROVAL_STRATEGY
 import io.holunda.testing.examples.basic.ApprovalProcessBean.Expressions.LOAD_APPROVAL_REQUEST
 import io.holunda.testing.examples.basic.ApprovalProcessBean.Variables.APPROVAL_DECISION
 import io.holunda.testing.examples.basic.ApprovalProcessBean.Variables.APPROVAL_STRATEGY
+import io.holunda.testing.examples.basic.BasicProcessApplication
 import io.toolisticon.testing.jgiven.step
 import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.assertThat
 import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.externalTask
