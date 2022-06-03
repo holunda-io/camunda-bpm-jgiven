@@ -16,7 +16,7 @@
 
   <properties>
     <camunda.version>7.17.0</camunda.version>
-    <jgiven.version>1.2.1</jgiven.version>
+    <jgiven.version>1.2.2</jgiven.version>
     <junit.version>4.13.2</junit.version>
     <assertj.version>3.23.1</assertj.version>
     <camunda-bpm-assert.version>15.0.0</camunda-bpm-assert.version>
