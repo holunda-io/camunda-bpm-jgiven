@@ -20,7 +20,7 @@
     <junit.version>4.13.2</junit.version>
     <assertj.version>3.23.1</assertj.version>
     <camunda-bpm-assert.version>15.0.0</camunda-bpm-assert.version>
-    <jgiven-kotlin.version>1.2.1</jgiven-kotlin.version>
+    <jgiven-kotlin.version>1.2.2</jgiven-kotlin.version>
 
     <java.version>11</java.version>
     <kotlin.version>1.6.21</kotlin.version>
