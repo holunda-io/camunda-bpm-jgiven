@@ -6,14 +6,15 @@
   <parent>
     <groupId>io.holunda.testing</groupId>
     <artifactId>camunda-bpm-jgiven-parent</artifactId>
-    <version>0.2.0</version>
+    <version>0.3.0</version>
   </parent>
 
   <artifactId>camunda-bpm-jgiven-examples</artifactId>
   <packaging>pom</packaging>
 
   <properties>
-    <spring-boot.version>2.6.4</spring-boot.version>
+    <spring-boot.version>2.7.5</spring-boot.version>
+    <camunda-process-test-coverage.version>2.0.0</camunda-process-test-coverage.version>
   </properties>
 
   <modules>

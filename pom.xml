@@ -5,7 +5,7 @@
 
   <groupId>io.holunda.testing</groupId>
   <artifactId>camunda-bpm-jgiven-parent</artifactId>
-  <version>0.2.0</version>
+  <version>0.3.0</version>
   <packaging>pom</packaging>
 
 
@@ -15,15 +15,14 @@
 
 
   <properties>
-    <camunda.version>7.16.0</camunda.version>
-    <jgiven.version>1.2.0</jgiven.version>
+    <camunda.version>7.18.0</camunda.version>
+    <jgiven.version>1.2.4</jgiven.version>
     <junit.version>4.13.2</junit.version>
-    <assertj.version>3.19.0</assertj.version>
-    <camunda-bpm-assert.version>13.0.0</camunda-bpm-assert.version>
-    <jgiven-kotlin.version>1.0.1</jgiven-kotlin.version>
+    <assertj.version>3.23.1</assertj.version>
+    <jgiven-kotlin.version>1.2.4.0</jgiven-kotlin.version>
 
     <java.version>11</java.version>
-    <kotlin.version>1.6.10</kotlin.version>
+    <kotlin.version>1.7.21</kotlin.version>
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
     <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
     <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -82,14 +81,14 @@
         <version>${camunda.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.camunda.bpm.assert</groupId>
-        <artifactId>camunda-bpm-assert</artifactId>
-        <version>${camunda-bpm-assert.version}</version>
-      </dependency>
-      <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
         <version>${junit.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.camunda.bpm</groupId>
+        <artifactId>camunda-bpm-assert</artifactId>
+        <version>${camunda.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -123,7 +122,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-enforcer-plugin</artifactId>
-          <version>3.0.0</version>
+          <version>3.1.0</version>
           <executions>
             <execution>
               <id>enforce-maven</id>
@@ -148,14 +147,14 @@
           <!-- cleaning -->
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-clean-plugin</artifactId>
-          <version>3.1.0</version>
+          <version>3.2.0</version>
         </plugin>
 
         <plugin>
           <!-- java compiler -->
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.10.0</version>
+          <version>3.10.1</version>
           <configuration>
             <encoding>UTF-8</encoding>
             <source>${java.version}</source>
@@ -193,7 +192,7 @@
           <!-- resources -->
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
-          <version>3.2.0</version>
+          <version>3.3.0</version>
           <configuration>
             <encoding>UTF-8</encoding>
           </configuration>
@@ -203,7 +202,7 @@
           <!-- git flow -->
           <groupId>com.amashchenko.maven.plugin</groupId>
           <artifactId>gitflow-maven-plugin</artifactId>
-          <version>1.18.0</version>
+          <version>1.19.0</version>
           <configuration>
             <gitFlowConfig>
               <productionBranch>master</productionBranch>
@@ -299,7 +298,7 @@
           <!-- javadoc for kotlin -->
           <groupId>org.jetbrains.dokka</groupId>
           <artifactId>dokka-maven-plugin</artifactId>
-          <version>1.6.10</version>
+          <version>1.7.20</version>
           <executions>
             <execution>
               <phase>test</phase>
@@ -378,7 +377,7 @@
         <!-- Deploy -->
         <plugin>
           <artifactId>maven-deploy-plugin</artifactId>
-          <version>3.0.0-M2</version>
+          <version>3.0.0</version>
           <configuration>
             <skip>true</skip>
           </configuration>
@@ -386,7 +385,7 @@
         <plugin>
           <groupId>org.sonatype.plugins</groupId>
           <artifactId>nexus-staging-maven-plugin</artifactId>
-          <version>1.6.12</version>
+          <version>1.6.13</version>
           <executions>
             <execution>
               <id>default-deploy</id>
@@ -406,7 +405,7 @@
         <!-- Install -->
         <plugin>
           <artifactId>maven-install-plugin</artifactId>
-          <version>2.5.2</version>
+          <version>3.1.0</version>
         </plugin>
 
       </plugins>
