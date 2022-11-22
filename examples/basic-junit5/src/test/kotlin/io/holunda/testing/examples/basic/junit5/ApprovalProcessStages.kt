@@ -18,8 +18,8 @@ import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.externalTask
 import org.camunda.bpm.engine.test.mock.Mocks
 import org.camunda.bpm.engine.variable.Variables
 import org.camunda.bpm.engine.variable.Variables.putValue
-import org.camunda.bpm.extension.mockito.CamundaMockito.getJavaDelegateMock
-import org.camunda.bpm.extension.mockito.CamundaMockito.registerJavaDelegateMock
+import org.camunda.community.mockito.DelegateExpressions.getJavaDelegateMock
+import org.camunda.community.mockito.DelegateExpressions.registerJavaDelegateMock
 
 @JGivenProcessStage
 class ApprovalProcessActionStage : ProcessStage<ApprovalProcessActionStage, ApprovalProcessBean>() {

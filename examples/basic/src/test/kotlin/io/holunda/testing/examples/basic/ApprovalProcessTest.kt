@@ -11,7 +11,8 @@ import io.toolisticon.testing.jgiven.WHEN
 import org.camunda.bpm.engine.test.Deployment
 import org.camunda.bpm.engine.test.ProcessEngineRule
 import org.camunda.bpm.engine.variable.Variables.putValue
-import org.camunda.bpm.spring.boot.starter.test.helper.StandaloneInMemoryTestConfiguration
+import org.camunda.community.process_test_coverage.junit4.platform7.rules.TestCoverageProcessEngineRuleBuilder
+import org.junit.ClassRule
 import org.junit.Rule
 import org.junit.Test
 import java.time.Period
@@ -21,11 +22,17 @@ import java.util.*
 @Deployment(resources = [ApprovalProcessBean.RESOURCE])
 open class ApprovalProcessTest : ScenarioTest<ApprovalProcessActionStage, ApprovalProcessActionStage, ApprovalProcessThenStage>() {
 
-  @get: Rule
-  val rule: ProcessEngineRule = StandaloneInMemoryTestConfiguration().rule()
+  companion object {
+    @get: ClassRule
+    @JvmStatic
+    val processEngineRule: ProcessEngineRule = TestCoverageProcessEngineRuleBuilder.create().build()
+  }
+
+  @get:Rule
+  val localRule: ProcessEngineRule = processEngineRule
 
   @ScenarioState
-  val camunda = rule.processEngine
+  val camunda = localRule.processEngine
 
   @Test
   fun `should deploy`() {

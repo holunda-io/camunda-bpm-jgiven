@@ -5,7 +5,7 @@
 
   <groupId>io.holunda.testing</groupId>
   <artifactId>camunda-bpm-jgiven-parent</artifactId>
-  <version>0.3.0</version>
+  <version>0.4.0</version>
   <packaging>pom</packaging>
 
 
@@ -45,6 +45,7 @@
         <scope>import</scope>
         <type>pom</type>
       </dependency>
+
       <dependency>
         <groupId>com.tngtech.jgiven</groupId>
         <artifactId>jgiven-junit</artifactId>
@@ -52,18 +53,13 @@
       </dependency>
       <dependency>
         <groupId>com.tngtech.jgiven</groupId>
-        <artifactId>jgiven-spring</artifactId>
+        <artifactId>jgiven-junit5</artifactId>
         <version>${jgiven.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.tngtech.jgiven</groupId>
-        <artifactId>jgiven-spring-junit4</artifactId>
-        <version>${jgiven.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.tngtech.jgiven</groupId>
-        <artifactId>jgiven-html5-report</artifactId>
-        <version>${jgiven.version}</version>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${junit.version}</version>
       </dependency>
       <dependency>
         <groupId>org.assertj</groupId>
@@ -79,11 +75,6 @@
         <groupId>org.camunda.bpm</groupId>
         <artifactId>camunda-engine</artifactId>
         <version>${camunda.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>${junit.version}</version>
       </dependency>
       <dependency>
         <groupId>org.camunda.bpm</groupId>

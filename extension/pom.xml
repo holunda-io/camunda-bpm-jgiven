@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.testing</groupId>
     <artifactId>camunda-bpm-jgiven-parent</artifactId>
-    <version>0.3.0</version>
+    <version>0.4.0</version>
   </parent>
 
   <artifactId>camunda-bpm-jgiven</artifactId>
@@ -14,28 +14,14 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.tngtech.jgiven</groupId>
-      <artifactId>jgiven-junit</artifactId>
-      <version>${jgiven.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.tngtech.jgiven</groupId>
-      <artifactId>jgiven-junit5</artifactId>
-      <version>${jgiven.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.tngtech.jgiven</groupId>
-      <artifactId>jgiven-spring</artifactId>
-      <version>${jgiven.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.tngtech.jgiven</groupId>
-      <artifactId>jgiven-html5-report</artifactId>
-      <version>${jgiven.version}</version>
-    </dependency>
-    <dependency>
       <groupId>io.toolisticon.testing</groupId>
       <artifactId>jgiven-kotlin</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.tngtech.jgiven</groupId>
+      <artifactId>jgiven-core</artifactId>
+      <version>${jgiven.version}</version>
     </dependency>
 
     <!-- This is a test library not a BOM, trying to avoid transitive dependencies -->

@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holunda.testing</groupId>
     <artifactId>camunda-bpm-jgiven-examples</artifactId>
-    <version>0.3.0</version>
+    <version>0.4.0</version>
   </parent>
 
   <artifactId>camunda-bpm-jgiven-examples-basic</artifactId>
@@ -24,7 +24,6 @@
     <dependency>
       <groupId>org.camunda.community.mockito</groupId>
       <artifactId>camunda-platform-7-mockito</artifactId>
-      <version>6.17.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -33,7 +32,11 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.camunda.bpm.springboot</groupId>
+      <groupId>com.tngtech.jgiven</groupId>
+      <artifactId>jgiven-junit</artifactId>
+    </dependency>
+    <dependency>
+    <groupId>org.camunda.bpm.springboot</groupId>
       <artifactId>camunda-bpm-spring-boot-starter-test</artifactId>
       <scope>test</scope>
     </dependency>
@@ -61,6 +64,10 @@
         <!-- report with JGiven -->
         <groupId>com.tngtech.jgiven</groupId>
         <artifactId>jgiven-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
       </plugin>
     </plugins>
   </build>
