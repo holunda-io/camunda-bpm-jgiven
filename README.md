@@ -111,7 +111,6 @@ and add the following content into your `camunda.cfg.xml`:
 ### JUnit5
 
 ```kotlin
-@ExtendWith(ProcessEngineExtension::class)
 @Deployment(resources = [ApprovalProcessBean.RESOURCE])
 internal class ApprovalProcessTest :
   ScenarioTest<ApprovalProcessActionStage, ApprovalProcessActionStage, ApprovalProcessThenStage>() {
