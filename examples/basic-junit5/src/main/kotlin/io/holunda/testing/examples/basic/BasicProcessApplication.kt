@@ -8,9 +8,10 @@ import org.springframework.context.annotation.Bean
 import java.time.temporal.ChronoUnit
 import java.util.*
 
+fun main(args: Array<String>) = runApplication<BasicProcessApplication>(*args).let { Unit }
+
 @EnableProcessApplication
 class BasicProcessApplication {
-  fun main(args: Array<String>) = runApplication<BasicProcessApplication>(*args).let { Unit }
 
   @Bean(APPROVE_REQUEST_TASK_LISTENER)
   fun approveRequestTaskListener() = TaskListener {
