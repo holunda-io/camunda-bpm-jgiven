@@ -19,7 +19,6 @@
     <jgiven.version>1.2.4</jgiven.version>
     <junit.version>4.13.2</junit.version>
     <assertj.version>3.23.1</assertj.version>
-    <camunda-bpm-assert.version>15.0.0</camunda-bpm-assert.version>
     <jgiven-kotlin.version>1.2.4.0</jgiven-kotlin.version>
 
     <java.version>11</java.version>
@@ -82,14 +81,14 @@
         <version>${camunda.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.camunda.bpm.assert</groupId>
-        <artifactId>camunda-bpm-assert</artifactId>
-        <version>${camunda-bpm-assert.version}</version>
-      </dependency>
-      <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
         <version>${junit.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.camunda.bpm</groupId>
+        <artifactId>camunda-bpm-assert</artifactId>
+        <version>${camunda.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

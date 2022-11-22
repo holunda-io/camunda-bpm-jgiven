@@ -31,17 +31,6 @@
       <groupId>org.camunda.bpm.springboot</groupId>
       <artifactId>camunda-bpm-spring-boot-starter-test</artifactId>
       <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.camunda.bpm.assert</groupId>
-          <artifactId>camunda-bpm-assert-assertj3-11-1</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.camunda.bpm.assert</groupId>
-      <artifactId>camunda-bpm-assert</artifactId>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.camunda.bpm.extension</groupId>
@@ -55,9 +44,9 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.camunda.bpm.extension</groupId>
-      <artifactId>camunda-bpm-process-test-coverage</artifactId>
-      <version>0.4.0</version>
+      <groupId>org.camunda.community.process_test_coverage</groupId>
+      <artifactId>camunda-process-test-coverage-junit4-platform-7</artifactId>
+      <version>${camunda-process-test-coverage.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
