@@ -22,6 +22,11 @@
       <artifactId>h2</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.camunda.community.mockito</groupId>
       <artifactId>camunda-platform-7-mockito</artifactId>
       <scope>test</scope>
@@ -48,7 +53,7 @@
     </dependency>
     <dependency>
       <groupId>org.camunda.community.process_test_coverage</groupId>
-      <artifactId>camunda-process-test-coverage-junit4-platform-7</artifactId>
+      <artifactId>camunda-process-test-coverage-junit5-platform-7</artifactId>
       <version>${camunda-process-test-coverage.version}</version>
       <scope>test</scope>
     </dependency>

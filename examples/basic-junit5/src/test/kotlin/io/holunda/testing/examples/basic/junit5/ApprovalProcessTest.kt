@@ -11,14 +11,11 @@ import io.toolisticon.testing.jgiven.THEN
 import io.toolisticon.testing.jgiven.WHEN
 import org.camunda.bpm.engine.test.Deployment
 import org.camunda.bpm.engine.variable.Variables.putValue
-import org.camunda.bpm.extension.junit5.test.ProcessEngineExtension
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.api.extension.RegisterExtension
 import java.time.Period
 import java.util.*
 
-@ExtendWith(ProcessEngineExtension::class)
 @Deployment(resources = [ApprovalProcessBean.RESOURCE])
 internal class ApprovalProcessTest :
   ScenarioTest<ApprovalProcessActionStage, ApprovalProcessActionStage, ApprovalProcessThenStage>() {
