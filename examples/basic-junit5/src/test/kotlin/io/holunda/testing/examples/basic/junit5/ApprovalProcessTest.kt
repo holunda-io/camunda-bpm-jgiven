@@ -20,8 +20,11 @@ import java.util.*
 internal class ApprovalProcessTest :
   ScenarioTest<ApprovalProcessActionStage, ApprovalProcessActionStage, ApprovalProcessThenStage>() {
 
-  @RegisterExtension
-  val extension = TestProcessEngine.DEFAULT
+  companion object {
+    @JvmField
+    @RegisterExtension
+    val extension = TestProcessEngine.DEFAULT
+  }
 
   @ScenarioState
   val camunda = extension.processEngine

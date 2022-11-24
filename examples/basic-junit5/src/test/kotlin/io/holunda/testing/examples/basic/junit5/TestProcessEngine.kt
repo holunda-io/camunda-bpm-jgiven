@@ -10,6 +10,8 @@ import org.camunda.bpm.engine.impl.cfg.StandaloneInMemProcessEngineConfiguration
 import org.camunda.bpm.engine.impl.history.HistoryLevel
 import org.camunda.bpm.engine.test.mock.MockExpressionManager
 import org.camunda.bpm.extension.junit5.test.ProcessEngineExtension
+import org.camunda.community.process_test_coverage.engine.platform7.ProcessCoverageConfigurator
+import org.camunda.community.process_test_coverage.junit5.platform7.ProcessEngineCoverageExtension
 import java.util.*
 import java.util.function.Consumer
 import java.util.stream.Collectors
@@ -72,12 +74,9 @@ enum class TestProcessEngine {
             return this
         }
 
-        fun engine(): ProcessEngineImpl {
-            return configuration.buildProcessEngine() as ProcessEngineImpl
-        }
-
         fun extension(): ProcessEngineExtension {
-            return ProcessEngineExtension.builder().useProcessEngine(engine()).build()
+            ProcessCoverageConfigurator.initializeProcessCoverageExtensions(configuration)
+            return ProcessEngineCoverageExtension.builder(configuration).build()
         }
 
         companion object {
