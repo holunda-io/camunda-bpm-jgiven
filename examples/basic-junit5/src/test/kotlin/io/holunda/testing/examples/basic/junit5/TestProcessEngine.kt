@@ -21,6 +21,9 @@ import java.util.stream.Stream
 enum class TestProcessEngine {
   ;
 
+  /**
+   * Creates the builder.
+   */
   class Builder internal constructor() {
     private val configuration: ProcessEngineConfigurationImpl
 

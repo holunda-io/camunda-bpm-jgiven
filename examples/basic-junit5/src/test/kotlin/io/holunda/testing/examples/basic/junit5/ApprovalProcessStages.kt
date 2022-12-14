@@ -21,9 +21,15 @@ import org.camunda.bpm.engine.variable.Variables.putValue
 import org.camunda.community.mockito.DelegateExpressions.getJavaDelegateMock
 import org.camunda.community.mockito.DelegateExpressions.registerJavaDelegateMock
 
+/**
+ * Process stage.
+ */
 @JGivenProcessStage
 class ApprovalProcessActionStage : ProcessStage<ApprovalProcessActionStage, ApprovalProcessBean>() {
 
+  /**
+   * mocks all expressions (delegates) of the process.
+   */
   @BeforeStage
   fun mock_all_delegates() {
     registerJavaDelegateMock(DETERMINE_APPROVAL_STRATEGY)
@@ -32,6 +38,9 @@ class ApprovalProcessActionStage : ProcessStage<ApprovalProcessActionStage, Appr
     Mocks.register(APPROVE_REQUEST_TASK_LISTENER, BasicProcessApplication().approveRequestTaskListener())
   }
 
+  /**
+   * Starts process.
+   */
   fun process_is_started_for_request(@Quoted approvalRequestId: String) = step {
     processInstanceSupplier = ApprovalProcessBean(camunda)
     processInstanceSupplier.start(approvalRequestId)
@@ -39,16 +48,25 @@ class ApprovalProcessActionStage : ProcessStage<ApprovalProcessActionStage, Appr
     assertThat(processInstanceSupplier.processInstance).isStarted
   }
 
+  /**
+   * Determines of the approval strategy can be applied.
+   */
   @As("\$approvalStrategy approval strategy can be applied")
   fun approval_strategy_can_be_applied(@Quoted approvalStrategy: String) = step {
     getJavaDelegateMock(DETERMINE_APPROVAL_STRATEGY).onExecutionSetVariables(Variables.putValue(APPROVAL_STRATEGY, approvalStrategy))
   }
 
+  /**
+   * Preloads the automatic approval with result.
+   */
   fun automatic_approval_returns(approvalResult: String) = step {
     external_task_is_completed(externalTask().topicName, putValue(APPROVAL_DECISION, approvalResult))
   }
 
 }
 
+/**
+ * Assert stage.
+ */
 @JGivenProcessStage
 class ApprovalProcessThenStage : ProcessStage<ApprovalProcessThenStage, ApprovalProcessBean>()
