@@ -41,3 +41,9 @@ jobs:
         env:
           OSS_CENTRAL_USERNAME: "${{ secrets.SONATYPE_USERNAME }}"
           OSS_CENTRAL_PASSWORD: "${{ secrets.SONATYPE_PASSWORD }}"
+
+      - name: Upload test coverage to Codacy
+        if: github.event_name == 'push' && github.actor != 'dependabot[bot]'
+        run: bash <(curl -Ls https://coverage.codacy.com/get.sh)
+        env:
+          CODACY_PROJECT_TOKEN: "${{secrets.CODACY_PROJECT_TOKEN}}"
