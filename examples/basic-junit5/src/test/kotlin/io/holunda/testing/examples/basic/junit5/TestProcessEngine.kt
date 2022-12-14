@@ -17,109 +17,148 @@ import java.util.function.Consumer
 import java.util.stream.Collectors
 import java.util.stream.Stream
 
-
+/**
+ * Test engine setup.
+ */
 enum class TestProcessEngine {
-    ;
+  ;
 
-    class Builder internal constructor() {
-        private val configuration: ProcessEngineConfigurationImpl
+  class Builder internal constructor() {
+    private val configuration: ProcessEngineConfigurationImpl
 
-        init {
-            configuration = StandaloneInMemProcessEngineConfiguration()
-            configuration.historyLevel = HistoryLevel.HISTORY_LEVEL_FULL
-            configuration.databaseSchemaUpdate = ProcessEngineConfiguration.DB_SCHEMA_UPDATE_TRUE
-            configuration.isJobExecutorActivate = false
-            configuration.isDbMetricsReporterActivate = false
-            configuration.expressionManager = MockExpressionManager()
-            configuration.isTelemetryReporterActivate = false
-            configuration.isInitializeTelemetry = false
-        }
+    init {
+      configuration = StandaloneInMemProcessEngineConfiguration()
+      configuration.historyLevel = HistoryLevel.HISTORY_LEVEL_FULL
+      configuration.databaseSchemaUpdate = ProcessEngineConfiguration.DB_SCHEMA_UPDATE_TRUE
+      configuration.isJobExecutorActivate = false
+      configuration.isDbMetricsReporterActivate = false
+      configuration.expressionManager = MockExpressionManager()
+      configuration.isTelemetryReporterActivate = false
+      configuration.isInitializeTelemetry = false
+    }
 
-        fun preInit(preInit: Consumer<ProcessEngineConfigurationImpl>): Builder {
-            plugin(createPlugin(preInit, null, null))
-            return this
-        }
+    /**
+     * Function to register pre-init hooks.
+     */
+    fun preInit(preInit: Consumer<ProcessEngineConfigurationImpl>): Builder {
+      plugin(createPlugin(preInit, null, null))
+      return this
+    }
 
-        fun postInit(postInit: Consumer<ProcessEngineConfigurationImpl>): Builder {
-            plugin(createPlugin(null, postInit, null))
-            return this
-        }
+    /**
+     * Function to register post-init hooks.
+     */
+    fun postInit(postInit: Consumer<ProcessEngineConfigurationImpl>): Builder {
+      plugin(createPlugin(null, postInit, null))
+      return this
+    }
 
-        fun postProcessEngineBuild(postProcessEngineBuild: Consumer<ProcessEngine>): Builder {
-            plugin(createPlugin(null, null, postProcessEngineBuild))
-            return this
-        }
+    /**
+     * Function to register post engine build hooks.
+     */
+    fun postProcessEngineBuild(postProcessEngineBuild: Consumer<ProcessEngine>): Builder {
+      plugin(createPlugin(null, null, postProcessEngineBuild))
+      return this
+    }
 
-        fun withDefaultSerializationFormat(defaultSerializationFormat: String): Builder {
-            configuration.defaultSerializationFormat = defaultSerializationFormat
-            return this
-        }
+    /**
+     * Set serialization format.
+     */
+    fun withDefaultSerializationFormat(defaultSerializationFormat: String): Builder {
+      configuration.defaultSerializationFormat = defaultSerializationFormat
+      return this
+    }
 
-        fun plugin(plugin: ProcessEnginePlugin): Builder {
-            configuration.processEnginePlugins.add(plugin)
-            return this
-        }
+    /**
+     * Adds an engine core plugin.
+     */
+    fun plugin(plugin: ProcessEnginePlugin): Builder {
+      configuration.processEnginePlugins.add(plugin)
+      return this
+    }
 
-        fun withH2MemNameDefault(): Builder {
-            return withH2MemName("camunda")
-        }
+    /**
+     * Sets default name for H" DB.
+     */
+    fun withH2MemNameDefault(): Builder {
+      return withH2MemName("camunda")
+    }
 
-        fun withH2MemName(databaseName: String): Builder {
-            preInit {
-                it.jdbcUrl = String.format(
-                    "jdbc:h2:mem:%s;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE",
-                    databaseName
-                )
-            }
-            return this
-        }
+    /**
+     * Sets name of the Camunda H2 DB.
+     */
+    fun withH2MemName(databaseName: String): Builder {
+      preInit {
+        it.jdbcUrl = String.format(
+          "jdbc:h2:mem:%s;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE",
+          databaseName
+        )
+      }
+      return this
+    }
 
-        fun extension(): ProcessEngineExtension {
-            ProcessCoverageConfigurator.initializeProcessCoverageExtensions(configuration)
-            return ProcessEngineCoverageExtension.builder(configuration).build()
-        }
+    /**
+     * Retrieves the engine.
+     */
+    fun engine(): ProcessEngineImpl {
+      return configuration.buildProcessEngine() as ProcessEngineImpl
+    }
 
-        companion object {
-            private fun createPlugin(
-                preInit: Consumer<ProcessEngineConfigurationImpl>?,
-                postInit: Consumer<ProcessEngineConfigurationImpl>?,
-                postProcessEngineBuild: Consumer<ProcessEngine>?
-            ): ProcessEnginePlugin {
-                return object : AbstractProcessEnginePlugin() {
-                    override fun preInit(processEngineConfiguration: ProcessEngineConfigurationImpl) {
-                        preInit?.accept(processEngineConfiguration)
-                    }
-
-                    override fun postInit(processEngineConfiguration: ProcessEngineConfigurationImpl) {
-                        postInit?.accept(processEngineConfiguration)
-                    }
-
-                    override fun postProcessEngineBuild(processEngine: ProcessEngine) {
-                        postProcessEngineBuild?.accept(processEngine)
-                    }
-
-                    override fun toString(): String {
-                        return Stream.of(preInit, postInit, postProcessEngineBuild).map(Objects::nonNull)
-                            .map { obj: Any -> obj.toString() }
-                            .collect(Collectors.joining("-"))
-                    }
-                }
-            }
-        }
+    /**
+     * Builds the JUnit5 extension.
+     */
+    fun extension(): ProcessEngineExtension {
+        ProcessCoverageConfigurator.initializeProcessCoverageExtensions(configuration)
+        return ProcessEngineCoverageExtension.builder(configuration).build()
     }
 
     companion object {
-        // util class, final, no instance
-        val DEFAULT = builder()
-            .withDefaultSerializationFormat("application/json")
-            .extension()
+      private fun createPlugin(
+        preInit: Consumer<ProcessEngineConfigurationImpl>?,
+        postInit: Consumer<ProcessEngineConfigurationImpl>?,
+        postProcessEngineBuild: Consumer<ProcessEngine>?
+      ): ProcessEnginePlugin {
+        return object : AbstractProcessEnginePlugin() {
+          override fun preInit(processEngineConfiguration: ProcessEngineConfigurationImpl) {
+            preInit?.accept(processEngineConfiguration)
+          }
 
-        fun builder(): Builder {
-            return Builder()
-        }
+          override fun postInit(processEngineConfiguration: ProcessEngineConfigurationImpl) {
+            postInit?.accept(processEngineConfiguration)
+          }
 
-        fun extension(): ProcessEngineExtension {
-            return builder().extension()
+          override fun postProcessEngineBuild(processEngine: ProcessEngine) {
+            postProcessEngineBuild?.accept(processEngine)
+          }
+
+          override fun toString(): String {
+            return Stream.of(preInit, postInit, postProcessEngineBuild).map(Objects::nonNull)
+              .map { obj: Any -> obj.toString() }
+              .collect(Collectors.joining("-"))
+          }
         }
+      }
     }
+  }
+
+  companion object {
+    // util class, final, no instance
+    val DEFAULT = builder()
+      .withDefaultSerializationFormat("application/json")
+      .extension()
+
+    /**
+     * Creates the builder.
+     */
+    fun builder(): Builder {
+      return Builder()
+    }
+
+    /**
+     * Creates the extension.
+     */
+    fun extension(): ProcessEngineExtension {
+      return builder().extension()
+    }
+  }
 }
