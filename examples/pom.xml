@@ -13,7 +13,7 @@
   <packaging>pom</packaging>
 
   <properties>
-    <spring-boot.version>2.7.5</spring-boot.version>
+    <spring-boot.version>3.0.1</spring-boot.version>
     <camunda-process-test-coverage.version>2.0.0</camunda-process-test-coverage.version>
     <camunda-platform-7-mockito.version>6.18.0</camunda-platform-7-mockito.version>
   </properties>
