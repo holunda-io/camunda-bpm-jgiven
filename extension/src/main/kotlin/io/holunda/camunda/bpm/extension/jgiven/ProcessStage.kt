@@ -8,6 +8,7 @@ import io.holunda.camunda.bpm.extension.jgiven.formatter.VariableMapFormat
 import io.toolisticon.testing.jgiven.step
 import org.assertj.core.api.Assertions.*
 import org.camunda.bpm.engine.ProcessEngine
+import org.camunda.bpm.engine.externaltask.LockedExternalTask
 import org.camunda.bpm.engine.impl.persistence.entity.TimerEntity
 import org.camunda.bpm.engine.impl.util.ClockUtil
 import org.camunda.bpm.engine.runtime.ProcessInstance
@@ -54,6 +55,7 @@ annotation class JGivenProcessStage
  */
 @JGivenProcessStage
 class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Supplier<ProcessInstance>> : Stage<SELF>() {
+
 
   /**
    * Process engine to work on.
@@ -398,7 +400,8 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
           .singleResult()
       }.filterIsInstance<TimerEntity>()
 
-    assertThat(timerJobs).`as`("Expected one instance waiting in $timerActivityId, but found ${timerJobs.size}.").hasSize(1)
+    assertThat(timerJobs).`as`("Expected one instance waiting in $timerActivityId, but found ${timerJobs.size}.")
+      .hasSize(1)
     assertThat(timerJobs[0]).hasDueDate(truncatedToMinutes)
   }
 
@@ -421,7 +424,8 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
           .jobDefinitionId(jobDefinition.id)
           .singleResult()
       }.filterIsInstance<TimerEntity>()
-    assertThat(timerJobs).`as`("Expected one instance waiting in $timerActivityId, but found ${timerJobs.size}.").hasSize(1)
+    assertThat(timerJobs).`as`("Expected one instance waiting in $timerActivityId, but found ${timerJobs.size}.")
+      .hasSize(1)
     job_is_executed(timerActivityId)
   }
 
@@ -450,9 +454,7 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
   fun external_task_is_completed(
     @Quoted topicName: String,
     @VariableMapFormat variables: VariableMap = createVariables()
-  ): SELF = step {
-    external_task_is_completed(topicName, variables, false)
-  }
+  ): SELF = external_task_is_completed(topicName = topicName, variables = variables, isAsyncAfter = false)
 
   /**
    * Completes external task.
@@ -464,20 +466,21 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
   @As("external task on topic \$topicName is completed with variables \$variables")
   fun external_task_is_completed(
     @Quoted topicName: String,
+    @Quoted workerName: String = "test-worker",
     @VariableMapFormat variables: VariableMap = createVariables(),
-    isAsyncAfter: Boolean = false
+    @Hidden isAsyncAfter: Boolean = false,
+    @Hidden  worker: (LockedExternalTask) -> Unit = {
+      camunda
+        .externalTaskService
+        .complete(it.id, workerName, variables)
+    }
   ): SELF = step {
     camunda
       .externalTaskService
-      .fetchAndLock(10, "test-worker")
+      .fetchAndLock(10, workerName)
       .topic(topicName, 1_000)
       .execute()
-      .forEach {
-        camunda
-          .externalTaskService
-          .complete(it.id, "test-worker", variables)
-
-      }
+      .forEach(worker)
 
     if (isAsyncAfter) {
       process_continues()

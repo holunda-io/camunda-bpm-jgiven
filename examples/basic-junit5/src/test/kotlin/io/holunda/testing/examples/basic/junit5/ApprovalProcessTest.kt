@@ -9,7 +9,11 @@ import io.toolisticon.testing.jgiven.AND
 import io.toolisticon.testing.jgiven.GIVEN
 import io.toolisticon.testing.jgiven.THEN
 import io.toolisticon.testing.jgiven.WHEN
+import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
+import org.camunda.bpm.engine.externaltask.LockedExternalTask
 import org.camunda.bpm.engine.test.Deployment
+import org.camunda.bpm.engine.variable.Variables.createVariables
 import org.camunda.bpm.engine.variable.Variables.putValue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
@@ -30,13 +34,13 @@ internal class ApprovalProcessTest :
   val camunda = extension.processEngine
 
   @Test
-  internal fun `should deploy`() {
+  fun `should deploy`() {
     THEN
       .process_is_deployed(ApprovalProcessBean.KEY)
   }
 
   @Test
-  internal fun `should start asynchronously`() {
+  fun `should start asynchronously`() {
 
     val approvalRequestId = UUID.randomUUID().toString()
 
@@ -49,7 +53,7 @@ internal class ApprovalProcessTest :
   }
 
   @Test
-  internal fun `should wait for automatic approve`() {
+  fun `should wait for automatic approve`() {
 
     val approvalRequestId = UUID.randomUUID().toString()
 
@@ -71,7 +75,7 @@ internal class ApprovalProcessTest :
   }
 
   @Test
-  internal fun `should automatic approve`() {
+  fun `should automatic approve`() {
 
     val approvalRequestId = UUID.randomUUID().toString()
 
@@ -94,9 +98,56 @@ internal class ApprovalProcessTest :
 
   }
 
+  @Test
+  fun `should automatic approve with custom worker`() {
+
+    // this is our custom worker that is called directly. It will track the activities it was called for.
+    class DummyWorker(val workerName: String, val topicName:String, val activities : MutableList<String> = mutableListOf()) : (LockedExternalTask) -> Unit{
+      override fun invoke(task: LockedExternalTask) {
+        camunda.externalTaskService.complete(task.id, workerName, putValue(ApprovalProcessBean.Variables.APPROVAL_DECISION, Expressions.ApprovalDecision.APPROVE))
+        activities.add(task.activityId)
+      }
+
+
+    }
+
+    val worker = DummyWorker(workerName = "dummyWorker", topicName = "approve-request")
+
+    val approvalRequestId = UUID.randomUUID().toString()
+
+    GIVEN
+      .process_is_deployed(ApprovalProcessBean.KEY)
+      .AND
+      .process_is_started_for_request(approvalRequestId)
+      .AND
+      .approval_strategy_can_be_applied(Expressions.ApprovalStrategy.AUTOMATIC)
+      .AND
+      .process_continues()
+
+    // not jgiven, but let's check here if the custom worker lambda works
+    assertThat(worker.activities).isEmpty()
+
+    WHEN
+      .external_task_is_completed(
+        workerName = worker.workerName,
+        topicName = worker.topicName,
+        isAsyncAfter = false,
+        variables = createVariables(),
+        worker = worker
+      )
+
+    THEN
+      .process_is_finished()
+      .AND
+      .process_has_passed(Elements.SERVICE_AUTO_APPROVE, Elements.END_APPROVED)
+
+    // not jgiven, but let's check here if the custom worker lambda works
+    assertThat(worker.activities).containsExactly("service_auto_approve_request")
+  }
+
 
   @Test
-  internal fun `should automatically reject`() {
+  fun `should automatically reject`() {
 
     val approvalRequestId = UUID.randomUUID().toString()
 
@@ -120,7 +171,7 @@ internal class ApprovalProcessTest :
   }
 
   @Test
-  internal fun `should manually reject`() {
+  fun `should manually reject`() {
 
     val approvalRequestId = UUID.randomUUID().toString()
 
@@ -153,7 +204,7 @@ internal class ApprovalProcessTest :
   }
 
   @Test
-  internal fun `should manually approve`() {
+  fun `should manually approve`() {
 
     val approvalRequestId = UUID.randomUUID().toString()
 

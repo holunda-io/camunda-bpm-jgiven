@@ -52,7 +52,7 @@ open class ApprovalProcessTest : ScenarioTest<ApprovalProcessActionStage, Approv
     val camunda = rule.processEngine
 
     @Test
-    internal fun `should automatically approve`() {
+    fun`should automatically approve`() {
 
         val approvalRequestId = UUID.randomUUID().toString()
 
@@ -122,7 +122,7 @@ internal class ApprovalProcessTest :
     val camunda = extension.processEngine
 
     @Test
-    internal fun `should automatically approve`() {
+    fun`should automatically approve`() {
 
         val approvalRequestId = UUID.randomUUID().toString()
 

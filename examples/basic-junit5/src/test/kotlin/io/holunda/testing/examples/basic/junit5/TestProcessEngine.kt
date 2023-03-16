@@ -20,8 +20,7 @@ import java.util.stream.Stream
 /**
  * Test engine setup.
  */
-enum class TestProcessEngine {
-  ;
+object TestProcessEngine {
 
   /**
    * Creates the builder.
@@ -111,8 +110,8 @@ enum class TestProcessEngine {
      * Builds the JUnit5 extension.
      */
     fun extension(): ProcessEngineExtension {
-        ProcessCoverageConfigurator.initializeProcessCoverageExtensions(configuration)
-        return ProcessEngineCoverageExtension.builder(configuration).build()
+      ProcessCoverageConfigurator.initializeProcessCoverageExtensions(configuration)
+      return ProcessEngineCoverageExtension.builder(configuration).build()
     }
 
     companion object {
@@ -144,24 +143,22 @@ enum class TestProcessEngine {
     }
   }
 
-  companion object {
-    // util class, final, no instance
-    val DEFAULT = builder()
-      .withDefaultSerializationFormat("application/json")
-      .extension()
+  // util class, final, no instance
+  val DEFAULT = builder()
+    .withDefaultSerializationFormat("application/json")
+    .extension()
 
-    /**
-     * Creates the builder.
-     */
-    fun builder(): Builder {
-      return Builder()
-    }
+  /**
+   * Creates the builder.
+   */
+  fun builder(): Builder {
+    return Builder()
+  }
 
-    /**
-     * Creates the extension.
-     */
-    fun extension(): ProcessEngineExtension {
-      return builder().extension()
-    }
+  /**
+   * Creates the extension.
+   */
+  fun extension(): ProcessEngineExtension {
+    return builder().extension()
   }
 }
