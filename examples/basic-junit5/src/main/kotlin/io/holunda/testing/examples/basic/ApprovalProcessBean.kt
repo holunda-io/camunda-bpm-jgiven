@@ -4,7 +4,12 @@ import org.camunda.bpm.engine.ProcessEngine
 import org.camunda.bpm.engine.runtime.ProcessInstance
 import java.util.function.Supplier
 
-class ApprovalProcessBean(private val processEngine: ProcessEngine) : Supplier<ProcessInstance> {
+/**
+ * Process backing bean.
+ */
+class ApprovalProcessBean(
+  private val processEngine: ProcessEngine
+) : Supplier<ProcessInstance> {
 
   companion object {
     const val KEY = "approval"
@@ -15,6 +20,9 @@ class ApprovalProcessBean(private val processEngine: ProcessEngine) : Supplier<P
 
   override fun get(): ProcessInstance = this.processInstance
 
+  /**
+   * BPMN elements.
+   */
   object Elements {
     const val START = "start"
     const val END_CANCELLED = "end_cancelled"
@@ -25,6 +33,9 @@ class ApprovalProcessBean(private val processEngine: ProcessEngine) : Supplier<P
     const val SERVICE_AUTO_APPROVE = "service_auto_approve_request"
   }
 
+  /**
+   * Process variables.
+   */
   object Variables {
     const val APPROVAL_REQUEST_ID = "approvalRequestId"
     const val APPROVAL_STRATEGY = "approvalStrategy"
@@ -33,6 +44,9 @@ class ApprovalProcessBean(private val processEngine: ProcessEngine) : Supplier<P
     const val ORIGINATOR = "originator"
   }
 
+  /**
+   * Expressions used in BPMN.
+   */
   object Expressions {
     const val LOAD_APPROVAL_REQUEST = "loadApprovalRequest"
     const val DETERMINE_APPROVAL_STRATEGY = "determineApprovalStrategy"
@@ -40,23 +54,35 @@ class ApprovalProcessBean(private val processEngine: ProcessEngine) : Supplier<P
     const val AUTOMATIC_APPROVAL_FAILED = "automaticApprovalFailed"
     const val APPROVE_REQUEST_TASK_LISTENER = "approveRequestTaskListener"
 
+    /**
+     * Values for approval strategy.
+     */
     object ApprovalStrategy {
       const val AUTOMATIC = "AUTOMATIC"
       const val MANUAL = "MANUAL"
     }
 
+    /**
+     * Values for approval decision.
+     */
     object ApprovalDecision {
       const val APPROVE = "APPROVE"
       const val REJECT = "REJECT"
       const val RETURN = "RETURN"
     }
 
+    /**
+     * Values for amend decision.
+     */
     object AmendAction {
       const val RESUBMIT = "RESUBMIT"
       const val CANCEL = "CANCEL"
     }
   }
 
+  /**
+   * Starts the business process.
+   */
   fun start(approvalRequestId: String) {
     this.processInstance = this.processEngine.runtimeService.startProcessInstanceByKey(
       KEY,

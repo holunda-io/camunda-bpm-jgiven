@@ -9,7 +9,7 @@ import com.tngtech.jgiven.format.PrintfFormatter
  */
 open class VarargsFormatter : ArgumentFormatter<Any> {
 
-  /**
+  /*
    * Formatter.
    */
   private val printfFormatter = PrintfFormatter()

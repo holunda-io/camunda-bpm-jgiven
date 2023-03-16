@@ -28,7 +28,7 @@ Add the following dependency to your Maven pom:
 <dependency>
   <groupId>io.holunda.testing</groupId>
   <artifactId>camunda-bpm-jgiven</artifactId>
-  <version>0.2.0</version>
+  <version>0.4.0</version>
   <scope>test</scope>
 </dependency>
 ```
@@ -52,7 +52,7 @@ open class ApprovalProcessTest : ScenarioTest<ApprovalProcessActionStage, Approv
     val camunda = rule.processEngine
 
     @Test
-    internal fun `should automatically approve`() {
+    fun`should automatically approve`() {
 
         val approvalRequestId = UUID.randomUUID().toString()
 
@@ -77,10 +77,40 @@ open class ApprovalProcessTest : ScenarioTest<ApprovalProcessActionStage, Approv
 }
 ```
 
+If you want to collect process test coverage during the test run, make sure to replace your rule declaration by the following: 
+
+```kotlin
+  companion object {
+  @get: ClassRule
+  @JvmStatic
+  val processEngineRule: ProcessEngineRule = TestCoverageProcessEngineRuleBuilder.create().build()
+}
+
+@get:Rule
+val rule: ProcessEngineRule = processEngineRule
+
+```
+
+and add the following content into your `camunda.cfg.xml`:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <bean id="processEngineConfiguration"
+        class="org.camunda.community.process_test_coverage.engine.platform7.ProcessCoverageInMemProcessEngineConfiguration">
+    <property name="history" value="full"/>
+  </bean>
+</beans>
+```
+
+
 ### JUnit5
 
 ```kotlin
-@ExtendWith(ProcessEngineExtension::class)
 @Deployment(resources = [ApprovalProcessBean.RESOURCE])
 internal class ApprovalProcessTest :
   ScenarioTest<ApprovalProcessActionStage, ApprovalProcessActionStage, ApprovalProcessThenStage>() {
@@ -92,7 +122,7 @@ internal class ApprovalProcessTest :
     val camunda = extension.processEngine
 
     @Test
-    internal fun `should automatically approve`() {
+    fun`should automatically approve`() {
 
         val approvalRequestId = UUID.randomUUID().toString()
 

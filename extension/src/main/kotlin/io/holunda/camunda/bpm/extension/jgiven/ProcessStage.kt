@@ -7,7 +7,9 @@ import io.holunda.camunda.bpm.extension.jgiven.formatter.QuotedVarargs
 import io.holunda.camunda.bpm.extension.jgiven.formatter.VariableMapFormat
 import io.toolisticon.testing.jgiven.step
 import org.assertj.core.api.Assertions.*
+import org.camunda.bpm.engine.ExternalTaskService
 import org.camunda.bpm.engine.ProcessEngine
+import org.camunda.bpm.engine.externaltask.LockedExternalTask
 import org.camunda.bpm.engine.impl.persistence.entity.TimerEntity
 import org.camunda.bpm.engine.impl.util.ClockUtil
 import org.camunda.bpm.engine.runtime.ProcessInstance
@@ -55,6 +57,7 @@ annotation class JGivenProcessStage
 @JGivenProcessStage
 class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Supplier<ProcessInstance>> : Stage<SELF>() {
 
+
   /**
    * Process engine to work on.
    */
@@ -75,6 +78,16 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
   @As("process waits in $")
   fun process_waits_in(@Quoted activityId: String): SELF = step {
     assertThat(processInstanceSupplier.get()).isWaitingAt(activityId)
+  }
+
+  /**
+   * Checks if the process instance is _not_ waiting in an activity with specified id.
+   * @param activityId definition id.
+   * @return fluent stage.
+   */
+  @As("process does not wait in $")
+  fun process_does_not_wait_in(@Quoted activityId: String): SELF = step {
+    assertThat(processInstanceSupplier.get()).isNotWaitingAt(activityId)
   }
 
   /**
@@ -398,7 +411,8 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
           .singleResult()
       }.filterIsInstance<TimerEntity>()
 
-    assertThat(timerJobs).`as`("Expected one instance waiting in $timerActivityId, but found ${timerJobs.size}.").hasSize(1)
+    assertThat(timerJobs).`as`("Expected one instance waiting in $timerActivityId, but found ${timerJobs.size}.")
+      .hasSize(1)
     assertThat(timerJobs[0]).hasDueDate(truncatedToMinutes)
   }
 
@@ -421,7 +435,8 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
           .jobDefinitionId(jobDefinition.id)
           .singleResult()
       }.filterIsInstance<TimerEntity>()
-    assertThat(timerJobs).`as`("Expected one instance waiting in $timerActivityId, but found ${timerJobs.size}.").hasSize(1)
+    assertThat(timerJobs).`as`("Expected one instance waiting in $timerActivityId, but found ${timerJobs.size}.")
+      .hasSize(1)
     job_is_executed(timerActivityId)
   }
 
@@ -440,6 +455,38 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
     assertThat(externalTasks).isNotEmpty
   }
 
+
+  /**
+   * Completes external task.
+   *
+   * @param topicName name of the topic.
+   * @param workerName optional, defaults to `test-worker`
+   * @param variables variables to set on completion, optional, defaults to empty map.
+   * @param isAsyncAfter executes the async job after completion, optional, defaults to `false`.
+   * @return fluent stage.
+   */
+  private fun externalTaskIsCompleted(
+    topicName: String,
+    workerName: String = "test-worker",
+    variables: VariableMap = createVariables(),
+    isAsyncAfter: Boolean = false,
+    worker: (LockedExternalTask) -> Unit = defaultExternalTaskWorker(
+      workerName = workerName,
+      variables = variables
+    )
+  ): SELF = step {
+    camunda
+      .externalTaskService
+      .fetchAndLock(10, workerName)
+      .topic(topicName, 1_000)
+      .execute()
+      .forEach(worker)
+
+    if (isAsyncAfter) {
+      process_continues()
+    }
+  }
+
   /**
    * Completes external task. If the task is marked as async-after, the process will not continue.
    * @param topicName name of the topic.
@@ -450,9 +497,10 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
   fun external_task_is_completed(
     @Quoted topicName: String,
     @VariableMapFormat variables: VariableMap = createVariables()
-  ): SELF = step {
-    external_task_is_completed(topicName, variables, false)
-  }
+  ): SELF = externalTaskIsCompleted(
+    topicName = topicName,
+    variables = variables
+  )
 
   /**
    * Completes external task.
@@ -465,24 +513,32 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
   fun external_task_is_completed(
     @Quoted topicName: String,
     @VariableMapFormat variables: VariableMap = createVariables(),
-    isAsyncAfter: Boolean = false
-  ): SELF = step {
-    camunda
-      .externalTaskService
-      .fetchAndLock(10, "test-worker")
-      .topic(topicName, 1_000)
-      .execute()
-      .forEach {
-        camunda
-          .externalTaskService
-          .complete(it.id, "test-worker", variables)
+    @Hidden isAsyncAfter: Boolean = false
+  ): SELF = externalTaskIsCompleted(topicName = topicName, variables = variables, isAsyncAfter = isAsyncAfter)
 
-      }
 
-    if (isAsyncAfter) {
-      process_continues()
-    }
-  }
+  /**
+   * Completes external task.
+   *
+   * @param topicName name of the topic.
+   * @param workerName optional, defaults to `test-worker`
+   * @param isAsyncAfter executes the async job after completion, optional, defaults to `false`.
+   * @param worker lambda with custom completion
+   * @return fluent stage.
+   */
+  @As("external task on topic \$topicName is completed by worker \$workerName")
+  @JvmOverloads
+  fun external_task_is_completed_by_worker(
+    @Quoted topicName: String,
+    @Quoted workerName: String = "test-worker",
+    @Hidden isAsyncAfter: Boolean = false,
+    @Hidden worker: (LockedExternalTask) -> Unit
+  ): SELF = externalTaskIsCompleted(
+    topicName = topicName,
+    workerName = workerName,
+    isAsyncAfter = isAsyncAfter,
+    worker = worker
+  )
 
   /**
    * Correlates message.
@@ -508,4 +564,11 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
       .correlate()
   }
 
+  internal fun defaultExternalTaskWorker(
+    externalTaskService: ExternalTaskService = camunda.externalTaskService,
+    workerName: String,
+    variables: VariableMap
+  ): (LockedExternalTask) -> Unit = {
+    externalTaskService.complete(it.id, workerName, variables)
+  }
 }
