@@ -58,7 +58,10 @@ class ApprovalProcessActionStage : ProcessStage<ApprovalProcessActionStage, Appr
    * Preloads result of automatic approval.
    */
   fun automatic_approval_returns(approvalResult: String) = step {
-    external_task_is_completed(externalTask().topicName, putValue(APPROVAL_DECISION, approvalResult))
+    external_task_is_completed(
+      topicName = externalTask().topicName,
+      variables = putValue(APPROVAL_DECISION, approvalResult)
+    )
   }
 
 }

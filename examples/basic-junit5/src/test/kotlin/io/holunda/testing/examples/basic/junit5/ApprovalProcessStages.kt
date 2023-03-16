@@ -53,7 +53,7 @@ class ApprovalProcessActionStage : ProcessStage<ApprovalProcessActionStage, Appr
    */
   @As("\$approvalStrategy approval strategy can be applied")
   fun approval_strategy_can_be_applied(@Quoted approvalStrategy: String) = step {
-    getJavaDelegateMock(DETERMINE_APPROVAL_STRATEGY).onExecutionSetVariables(Variables.putValue(APPROVAL_STRATEGY, approvalStrategy))
+    getJavaDelegateMock(DETERMINE_APPROVAL_STRATEGY).onExecutionSetVariables(putValue(APPROVAL_STRATEGY, approvalStrategy))
   }
 
   /**
@@ -61,8 +61,8 @@ class ApprovalProcessActionStage : ProcessStage<ApprovalProcessActionStage, Appr
    */
   fun automatic_approval_returns(approvalResult: String) = step {
     external_task_is_completed(
-      topicName = externalTask().topicName,
-      variables = putValue(APPROVAL_DECISION, approvalResult),
+      externalTask().topicName,
+      putValue(APPROVAL_DECISION, approvalResult),
     )
   }
 

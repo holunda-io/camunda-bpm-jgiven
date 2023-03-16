@@ -7,6 +7,7 @@ import io.holunda.camunda.bpm.extension.jgiven.formatter.QuotedVarargs
 import io.holunda.camunda.bpm.extension.jgiven.formatter.VariableMapFormat
 import io.toolisticon.testing.jgiven.step
 import org.assertj.core.api.Assertions.*
+import org.camunda.bpm.engine.ExternalTaskService
 import org.camunda.bpm.engine.ProcessEngine
 import org.camunda.bpm.engine.externaltask.LockedExternalTask
 import org.camunda.bpm.engine.impl.persistence.entity.TimerEntity
@@ -77,6 +78,16 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
   @As("process waits in $")
   fun process_waits_in(@Quoted activityId: String): SELF = step {
     assertThat(processInstanceSupplier.get()).isWaitingAt(activityId)
+  }
+
+  /**
+   * Checks if the process instance is _not_ waiting in an activity with specified id.
+   * @param activityId definition id.
+   * @return fluent stage.
+   */
+  @As("process does not wait in $")
+  fun process_does_not_wait_in(@Quoted activityId: String): SELF = step {
+    assertThat(processInstanceSupplier.get()).isNotWaitingAt(activityId)
   }
 
   /**
@@ -444,36 +455,25 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
     assertThat(externalTasks).isNotEmpty
   }
 
-  /**
-   * Completes external task. If the task is marked as async-after, the process will not continue.
-   * @param topicName name of the topic.
-   * @param variables variables to set on completion.
-   * @return fluent stage.
-   */
-  @As("external task on topic \$topicName is completed with variables \$variables")
-  fun external_task_is_completed(
-    @Quoted topicName: String,
-    @VariableMapFormat variables: VariableMap = createVariables()
-  ): SELF = external_task_is_completed(topicName = topicName, variables = variables, isAsyncAfter = false)
 
   /**
    * Completes external task.
+   *
    * @param topicName name of the topic.
-   * @param variables variables to set on completion.
-   * @param isAsyncAfter executes the async job after completion.
+   * @param workerName optional, defaults to `test-worker`
+   * @param variables variables to set on completion, optional, defaults to empty map.
+   * @param isAsyncAfter executes the async job after completion, optional, defaults to `false`.
    * @return fluent stage.
    */
-  @As("external task on topic \$topicName is completed with variables \$variables")
-  fun external_task_is_completed(
-    @Quoted topicName: String,
-    @Quoted workerName: String = "test-worker",
-    @VariableMapFormat variables: VariableMap = createVariables(),
-    @Hidden isAsyncAfter: Boolean = false,
-    @Hidden  worker: (LockedExternalTask) -> Unit = {
-      camunda
-        .externalTaskService
-        .complete(it.id, workerName, variables)
-    }
+  private fun externalTaskIsCompleted(
+    topicName: String,
+    workerName: String = "test-worker",
+    variables: VariableMap = createVariables(),
+    isAsyncAfter: Boolean = false,
+    worker: (LockedExternalTask) -> Unit = defaultExternalTaskWorker(
+      workerName = workerName,
+      variables = variables
+    )
   ): SELF = step {
     camunda
       .externalTaskService
@@ -486,6 +486,59 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
       process_continues()
     }
   }
+
+  /**
+   * Completes external task. If the task is marked as async-after, the process will not continue.
+   * @param topicName name of the topic.
+   * @param variables variables to set on completion.
+   * @return fluent stage.
+   */
+  @As("external task on topic \$topicName is completed with variables \$variables")
+  fun external_task_is_completed(
+    @Quoted topicName: String,
+    @VariableMapFormat variables: VariableMap = createVariables()
+  ): SELF = externalTaskIsCompleted(
+    topicName = topicName,
+    variables = variables
+  )
+
+  /**
+   * Completes external task.
+   * @param topicName name of the topic.
+   * @param variables variables to set on completion.
+   * @param isAsyncAfter executes the async job after completion.
+   * @return fluent stage.
+   */
+  @As("external task on topic \$topicName is completed with variables \$variables")
+  fun external_task_is_completed(
+    @Quoted topicName: String,
+    @VariableMapFormat variables: VariableMap = createVariables(),
+    @Hidden isAsyncAfter: Boolean = false
+  ): SELF = externalTaskIsCompleted(topicName = topicName, variables = variables, isAsyncAfter = isAsyncAfter)
+
+
+  /**
+   * Completes external task.
+   *
+   * @param topicName name of the topic.
+   * @param workerName optional, defaults to `test-worker`
+   * @param isAsyncAfter executes the async job after completion, optional, defaults to `false`.
+   * @param worker lambda with custom completion
+   * @return fluent stage.
+   */
+  @As("external task on topic \$topicName is completed by worker \$workerName")
+  @JvmOverloads
+  fun external_task_is_completed_by_worker(
+    @Quoted topicName: String,
+    @Quoted workerName: String = "test-worker",
+    @Hidden isAsyncAfter: Boolean = false,
+    @Hidden worker: (LockedExternalTask) -> Unit
+  ): SELF = externalTaskIsCompleted(
+    topicName = topicName,
+    workerName = workerName,
+    isAsyncAfter = isAsyncAfter,
+    worker = worker
+  )
 
   /**
    * Correlates message.
@@ -511,4 +564,11 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
       .correlate()
   }
 
+  internal fun defaultExternalTaskWorker(
+    externalTaskService: ExternalTaskService = camunda.externalTaskService,
+    workerName: String,
+    variables: VariableMap
+  ): (LockedExternalTask) -> Unit = {
+    externalTaskService.complete(it.id, workerName, variables)
+  }
 }

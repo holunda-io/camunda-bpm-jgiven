@@ -9,11 +9,9 @@ import io.toolisticon.testing.jgiven.AND
 import io.toolisticon.testing.jgiven.GIVEN
 import io.toolisticon.testing.jgiven.THEN
 import io.toolisticon.testing.jgiven.WHEN
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.camunda.bpm.engine.externaltask.LockedExternalTask
 import org.camunda.bpm.engine.test.Deployment
-import org.camunda.bpm.engine.variable.Variables.createVariables
 import org.camunda.bpm.engine.variable.Variables.putValue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
@@ -70,6 +68,8 @@ internal class ApprovalProcessTest :
     THEN
       .process_waits_in(Elements.SERVICE_AUTO_APPROVE)
       .AND
+      .process_does_not_wait_in(Elements.USER_APPROVE_REQUEST)
+      .AND
       .external_task_exists("approve-request")
 
   }
@@ -102,9 +102,17 @@ internal class ApprovalProcessTest :
   fun `should automatic approve with custom worker`() {
 
     // this is our custom worker that is called directly. It will track the activities it was called for.
-    class DummyWorker(val workerName: String, val topicName:String, val activities : MutableList<String> = mutableListOf()) : (LockedExternalTask) -> Unit{
+    class DummyWorker(
+      val workerName: String,
+      val topicName: String,
+      val activities: MutableList<String> = mutableListOf()
+    ) : (LockedExternalTask) -> Unit {
       override fun invoke(task: LockedExternalTask) {
-        camunda.externalTaskService.complete(task.id, workerName, putValue(ApprovalProcessBean.Variables.APPROVAL_DECISION, Expressions.ApprovalDecision.APPROVE))
+        camunda.externalTaskService.complete(
+          task.id,
+          workerName,
+          putValue(ApprovalProcessBean.Variables.APPROVAL_DECISION, Expressions.ApprovalDecision.APPROVE)
+        )
         activities.add(task.activityId)
       }
 
@@ -128,11 +136,10 @@ internal class ApprovalProcessTest :
     assertThat(worker.activities).isEmpty()
 
     WHEN
-      .external_task_is_completed(
+      .external_task_is_completed_by_worker(
         workerName = worker.workerName,
         topicName = worker.topicName,
         isAsyncAfter = false,
-        variables = createVariables(),
         worker = worker
       )
 
