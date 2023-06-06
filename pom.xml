@@ -301,7 +301,7 @@
           <!-- javadoc for kotlin -->
           <groupId>org.jetbrains.dokka</groupId>
           <artifactId>dokka-maven-plugin</artifactId>
-          <version>1.8.10</version>
+          <version>1.8.20</version>
           <executions>
             <execution>
               <phase>test</phase>
