@@ -200,7 +200,7 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
    * @param users list of candidate users that must be candidate.
    * @return fluent stage.
    */
-  fun task_is_visible_to_users(@QuotedVarargs users: Array<String>): SELF = step {
+  fun task_is_visible_to_users(@QuotedVarargs vararg users: String): SELF = step {
     val task = task()
     users.forEach { user -> assertThat(task).hasCandidateUser(user) }
   }
@@ -210,7 +210,7 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
    * @param groups list of candidate groups that must be candidate.
    * @return fluent stage.
    */
-  fun task_is_visible_to_groups(@QuotedVarargs groups: Array<String>): SELF = step {
+  fun task_is_visible_to_groups(@QuotedVarargs vararg groups: String): SELF = step {
     val task = task()
     groups.forEach { group -> assertThat(task).hasCandidateGroup(group) }
   }
@@ -320,7 +320,7 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
    * @return fluent stage.
    */
   @As("variables $ are not present")
-  fun variables_are_not_present(@QuotedVarargs variableNames: Array<String>): SELF = step {
+  fun variables_are_not_present(@QuotedVarargs vararg variableNames: String): SELF = step {
     assertThat(processInstanceSupplier.get())
       .`as`("variables ${variableNames.joinToString(", ")} should not be present")
       .variables().doesNotContainKeys(*variableNames)
