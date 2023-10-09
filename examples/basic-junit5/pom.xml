@@ -41,9 +41,8 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.camunda.bpm.extension</groupId>
+      <groupId>org.camunda.bpm</groupId>
       <artifactId>camunda-bpm-junit5</artifactId>
-      <version>1.1.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>

@@ -75,6 +75,12 @@
         <artifactId>camunda-bpm-assert</artifactId>
         <version>${camunda.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.camunda.bpm</groupId>
+        <artifactId>camunda-bpm-junit5</artifactId>
+        <version>${camunda.version}</version>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 
