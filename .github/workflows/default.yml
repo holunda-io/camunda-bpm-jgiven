@@ -1,4 +1,4 @@
-name: Development braches
+name: Development branches
 
 on:
   push:
@@ -10,10 +10,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        jdk: ['11.0.5']
     steps:
 
       - name: Checkout code
@@ -22,7 +18,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          java-version: ${{ matrix.jdk }}
+          java-version: 17
           distribution: zulu
           cache: maven
 
