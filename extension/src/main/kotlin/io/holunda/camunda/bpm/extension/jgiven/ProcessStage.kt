@@ -98,9 +98,10 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
   @As("process waits in activities $")
   fun process_waits_in(@QuotedVarargs vararg activityId: String) = step {
     require(activityId.isNotEmpty()) { "At least one activity id must be provided" }
-    activityId.map {
-      val job = job(it)
-      assertThat(job).`as`("Expecting the process to be waiting in activity '$it', but it was not.").isNotNull
+
+    val processInstance = processInstanceSupplier.get()
+    activityId.forEach {
+      assertThat(processInstance).isWaitingAt(it)
     }
   }
 
