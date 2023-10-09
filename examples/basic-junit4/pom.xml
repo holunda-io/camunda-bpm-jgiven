@@ -9,7 +9,7 @@
     <version>0.4.2-SNAPSHOT</version>
   </parent>
 
-  <artifactId>camunda-bpm-jgiven-examples-basic</artifactId>
+  <artifactId>camunda-bpm-jgiven-examples-basic-junit4</artifactId>
   <packaging>jar</packaging>
 
   <dependencies>
