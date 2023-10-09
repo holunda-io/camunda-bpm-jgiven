@@ -13,13 +13,14 @@
   <packaging>pom</packaging>
 
   <properties>
-    <spring-boot.version>2.7.5</spring-boot.version>
+    <spring-boot.version>2.7.6</spring-boot.version>
     <camunda-process-test-coverage.version>2.2.0</camunda-process-test-coverage.version>
     <camunda-platform-7-mockito.version>6.19.1</camunda-platform-7-mockito.version>
+    <junit.version>4.13.2</junit.version>
   </properties>
 
   <modules>
-    <module>basic</module>
+    <module>basic-junit4</module>
     <module>basic-junit5</module>
   </modules>
 
@@ -68,8 +69,12 @@
         <artifactId>jgiven-junit5</artifactId>
         <version>${jgiven.version}</version>
       </dependency>
-
-
+      <dependency>
+        <!-- for legacy examples only -->
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${junit.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
