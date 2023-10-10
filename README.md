@@ -2,6 +2,7 @@
 Camunda specific stages and scenarios for the BDD testing tool JGiven written in Kotlin.
 
 [![stable](https://img.shields.io/badge/lifecycle-STABLE-green.svg)](https://github.com/holisticon#open-source-lifecycle)
+[![Camunda 7.20](https://img.shields.io/badge/Camunda%20Version-7.20-orange.svg)]([https://github.com/holisticon#open-source-lifecycle](https://docs.camunda.org/manual/7.20/))
 [![Development braches](https://github.com/holunda-io/camunda-bpm-jgiven/workflows/Development%20braches/badge.svg)](https://github.com/holunda-io/camunda-bpm-jgiven/workflows) 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.holunda.testing/camunda-bpm-jgiven/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.holunda.testing/camunda-bpm-jgiven)
 
