@@ -302,7 +302,7 @@
           <!-- javadoc for kotlin -->
           <groupId>org.jetbrains.dokka</groupId>
           <artifactId>dokka-maven-plugin</artifactId>
-          <version>1.9.0</version>
+          <version>1.9.10</version>
           <executions>
             <execution>
               <phase>test</phase>
