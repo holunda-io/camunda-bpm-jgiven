@@ -8,8 +8,8 @@ import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl
 import org.camunda.bpm.engine.impl.cfg.ProcessEnginePlugin
 import org.camunda.bpm.engine.impl.cfg.StandaloneInMemProcessEngineConfiguration
 import org.camunda.bpm.engine.impl.history.HistoryLevel
+import org.camunda.bpm.engine.test.junit5.ProcessEngineExtension
 import org.camunda.bpm.engine.test.mock.MockExpressionManager
-import org.camunda.bpm.extension.junit5.test.ProcessEngineExtension
 import org.camunda.community.process_test_coverage.engine.platform7.ProcessCoverageConfigurator
 import org.camunda.community.process_test_coverage.junit5.platform7.ProcessEngineCoverageExtension
 import java.util.*
