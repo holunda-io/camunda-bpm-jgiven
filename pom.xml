@@ -17,11 +17,11 @@
   <properties>
     <camunda.version>7.21.0</camunda.version>
     <jgiven.version>1.3.1</jgiven.version>
-    <assertj.version>3.25.3</assertj.version>
+    <assertj.version>3.26.0</assertj.version>
     <jgiven-kotlin.version>1.3.1.0</jgiven-kotlin.version>
 
     <java.version>17</java.version>
-    <kotlin.version>1.9.23</kotlin.version>
+    <kotlin.version>2.0.0</kotlin.version>
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
     <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
     <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -318,7 +318,7 @@
           <!-- source from kotlin -->
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>build-helper-maven-plugin</artifactId>
-          <version>3.5.0</version>
+          <version>3.6.0</version>
           <executions>
             <execution>
               <phase>generate-sources</phase>
@@ -358,7 +358,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-gpg-plugin</artifactId>
-          <version>3.2.3</version>
+          <version>3.2.4</version>
           <configuration>
             <gpgArguments>
               <arg>--batch</arg>
@@ -381,7 +381,7 @@
         <!-- Deploy -->
         <plugin>
           <artifactId>maven-deploy-plugin</artifactId>
-          <version>3.1.1</version>
+          <version>3.1.2</version>
           <configuration>
             <skip>true</skip>
           </configuration>
@@ -389,7 +389,7 @@
         <plugin>
           <groupId>org.sonatype.plugins</groupId>
           <artifactId>nexus-staging-maven-plugin</artifactId>
-          <version>1.6.13</version>
+          <version>1.7.0</version>
           <executions>
             <execution>
               <id>default-deploy</id>
@@ -409,7 +409,7 @@
         <!-- Install -->
         <plugin>
           <artifactId>maven-install-plugin</artifactId>
-          <version>3.1.1</version>
+          <version>3.1.2</version>
         </plugin>
 
       </plugins>
