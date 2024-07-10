@@ -31,6 +31,7 @@ class ApprovalProcessBean(
     const val USER_APPROVE_REQUEST = "user_approve_request"
     const val USER_AMEND_REQUEST = "user_amend_request"
     const val SERVICE_AUTO_APPROVE = "service_auto_approve_request"
+    const val EXTERNAL_INFORM_REJECTION = "external_inform_rejection"
   }
 
   /**
@@ -40,7 +41,7 @@ class ApprovalProcessBean(
     const val APPROVAL_REQUEST_ID = "approvalRequestId"
     const val APPROVAL_STRATEGY = "approvalStrategy"
     const val APPROVAL_DECISION = "approvalDecision"
-    const val AMEND_ACTION = "ammendAction"
+    const val AMEND_ACTION = "amendAction"
     const val ORIGINATOR = "originator"
   }
 
