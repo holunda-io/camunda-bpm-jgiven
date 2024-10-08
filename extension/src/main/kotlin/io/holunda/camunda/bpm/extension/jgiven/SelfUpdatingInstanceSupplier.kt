@@ -10,17 +10,25 @@ import java.util.function.Supplier
  */
 open class SelfUpdatingInstanceSupplier(
   protected val processInstanceId: String,
-  protected val runtimeService: RuntimeService
+  protected val runtimeService: RuntimeService,
+  private var lastSeenInstance: ProcessInstance? = null
 ) : Supplier<ProcessInstance> {
 
   /**
    * Retrieves the process instance.
    */
   override fun get(): ProcessInstance {
-    val instances = runtimeService.createProcessInstanceQuery().active().processInstanceId(processInstanceId).list()
-    return when (instances.size) {
-      1 -> instances.first()
-      else -> throw IllegalArgumentException("Could not find process instance with id: $processInstanceId.")
+    val instance: ProcessInstance? = runtimeService
+      .createProcessInstanceQuery()
+      .active()
+      .processInstanceId(processInstanceId)
+      .singleResult()
+
+    if (instance != null) {
+      this.lastSeenInstance = instance
     }
+
+    return this.lastSeenInstance
+      ?: throw IllegalArgumentException("Could not find process instance with id: $processInstanceId.")
   }
 }
