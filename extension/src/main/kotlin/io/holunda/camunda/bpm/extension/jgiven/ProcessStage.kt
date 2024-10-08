@@ -88,16 +88,27 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
    */
   var updateInstanceAutomatically: Boolean = false
 
+  /**
+   * Creates the stage using process instance supplier builder: a function that is able to construct process bean out of process instance.
+   * @param processInstanceSupplierBuilder builder function.
+   */
   @As("using process instance supplier")
   fun using_process_instance_supplier(processInstanceSupplierBuilder: Function<ProcessInstance, PROCESS_BEAN>): SELF = step {
     this.processInstanceSupplierBuilder = processInstanceSupplierBuilder
   }
 
+  /**
+   * Creates the stage using process instance starter.
+   * @param processInstanceStarter starter for the process instance.
+   */
   @As("using process instance starter")
   fun using_process_instance_starter(processInstanceStarter: Supplier<ProcessInstance>): SELF = step {
     this.processInstanceStarter = processInstanceStarter
   }
 
+  /**
+   * Process is started using the process instance starter.
+   */
   @As("process_is_started")
   fun process_is_started() : SELF = step {
     assertProcessInstanceStarter()
@@ -107,6 +118,10 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
     processInstanceSupplier = processInstanceSupplierBuilder.apply(instance)
   }
 
+  /**
+   * Fluent builder to update instance rebuilding the process instance supplier each time.
+   * @param flag if true, the process instance supplier will be constructed each time using the process instance supplier builder.
+   */
   fun updating_instance_automatically(flag: Boolean): SELF = step {
     this.updateInstanceAutomatically = flag
   }
@@ -284,7 +299,7 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
   }
 
   /**
-   * Asserts the task task has a follow-up date
+   * Asserts the task has a follow-up date
    * @param followUpDatePeriod period calculated from creation.
    * @return fluent stage.
    */
