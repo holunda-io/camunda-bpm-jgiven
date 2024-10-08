@@ -210,8 +210,8 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
    * @param activityId activities the execution is waiting at.
    * @return fluent stage.
    */
-  @As("process continues")
-  fun process_continues(vararg activityId: String) = job_is_executed(*activityId)
+  @As("process continues with activities $")
+  fun process_continues(@QuotedVarargs vararg activityId: String) = job_is_executed(*activityId)
 
 
   /**
@@ -504,7 +504,7 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
    * @param activityId id of the activity the job is waiting in.
    * @return fluent stage.
    */
-  fun job_is_executed(vararg activityId: String) = step {
+  fun job_is_executed(@QuotedVarargs vararg activityId: String) = step {
     require(activityId.isNotEmpty()) { "At least one activity id must be provided" }
     activityId.map {
       val job = job(it)
@@ -580,16 +580,6 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
     assertThat(externalTasks).isNotEmpty
   }
 
-
-  /**
-   * Completes external task.
-   *
-   * @param topicName name of the topic.
-   * @param workerName optional, defaults to `test-worker`
-   * @param variables variables to set on completion, optional, defaults to empty map.
-   * @param isAsyncAfter executes the async job after completion, optional, defaults to `false`.
-   * @return fluent stage.
-   */
   private fun externalTaskIsCompleted(
     topicName: String,
     workerName: String = "test-worker",

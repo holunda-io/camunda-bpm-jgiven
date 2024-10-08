@@ -11,6 +11,9 @@ class ApprovalProcessBean(
   private val processEngine: ProcessEngine
 ) : Supplier<ProcessInstance> {
 
+  /**
+   * Main attributes.
+   */
   companion object {
     const val KEY = "approval"
     const val RESOURCE = "approval.bpmn"
