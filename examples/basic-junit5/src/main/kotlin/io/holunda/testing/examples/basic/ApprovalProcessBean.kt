@@ -55,6 +55,9 @@ class ApprovalProcessBean(
     const val AUTOMATIC_APPROVAL_FAILED = "automaticApprovalFailed"
     const val APPROVE_REQUEST_TASK_LISTENER = "approveRequestTaskListener"
 
+    const val TOPIC_APPROVE_REQUEST = "approve-request"
+    const val TOPIC_INFORM_ABOUT_REJECTION = "inform-about-rejection"
+
     /**
      * Values for approval strategy.
      */

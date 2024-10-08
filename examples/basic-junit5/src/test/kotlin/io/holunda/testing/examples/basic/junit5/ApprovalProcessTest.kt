@@ -8,6 +8,8 @@ import io.holunda.testing.examples.basic.ApprovalProcessBean.Elements
 import io.holunda.testing.examples.basic.ApprovalProcessBean.Expressions
 import io.holunda.testing.examples.basic.ApprovalProcessBean.Expressions.ApprovalDecision.APPROVE
 import io.holunda.testing.examples.basic.ApprovalProcessBean.Expressions.ApprovalDecision.REJECT
+import io.holunda.testing.examples.basic.ApprovalProcessBean.Expressions.TOPIC_APPROVE_REQUEST
+import io.holunda.testing.examples.basic.ApprovalProcessBean.Expressions.TOPIC_INFORM_ABOUT_REJECTION
 import io.holunda.testing.examples.basic.ApprovalProcessBean.Variables.APPROVAL_DECISION
 import io.toolisticon.testing.jgiven.AND
 import io.toolisticon.testing.jgiven.GIVEN
@@ -75,7 +77,7 @@ internal class ApprovalProcessTest :
       .AND
       .process_does_not_wait_in(Elements.USER_APPROVE_REQUEST)
       .AND
-      .external_task_exists("approve-request")
+      .external_task_exists(TOPIC_APPROVE_REQUEST)
 
   }
 
@@ -119,7 +121,7 @@ internal class ApprovalProcessTest :
 
     val worker = ActivityTrackingExternalTaskWorker(
       externalTaskService = camunda.externalTaskService,
-      topicName = "approve-request",
+      topicName = TOPIC_APPROVE_REQUEST,
       variablesToSet = putValue(APPROVAL_DECISION, APPROVE)
     )
 
@@ -177,7 +179,7 @@ internal class ApprovalProcessTest :
       .AND
       .process_waits_in_external_task(Elements.EXTERNAL_INFORM_REJECTION)
       .AND
-      .external_task_exists("inform-about-rejection")
+      .external_task_exists(TOPIC_INFORM_ABOUT_REJECTION)
   }
 
   @Test
@@ -211,7 +213,7 @@ internal class ApprovalProcessTest :
       .AND
       .process_waits_in_external_task(Elements.EXTERNAL_INFORM_REJECTION)
       .AND
-      .external_task_exists("inform-about-rejection")
+      .external_task_exists(TOPIC_INFORM_ABOUT_REJECTION)
 
   }
 
@@ -219,7 +221,7 @@ internal class ApprovalProcessTest :
   fun `should inform about rejection`() {
     val worker = ActivityTrackingExternalTaskWorker(
       externalTaskService = camunda.externalTaskService,
-      topicName = "inform-about-rejection"
+      topicName = TOPIC_INFORM_ABOUT_REJECTION
     )
     val approvalRequestId = UUID.randomUUID().toString()
 
@@ -238,7 +240,7 @@ internal class ApprovalProcessTest :
       .AND
       .process_waits_in_external_task(Elements.EXTERNAL_INFORM_REJECTION)
       .AND
-      .external_task_exists("inform-about-rejection")
+      .external_task_exists(TOPIC_INFORM_ABOUT_REJECTION)
 
     WHEN
       .external_task_is_completed_by_worker(
