@@ -5,7 +5,7 @@
 
   <groupId>io.holunda.testing</groupId>
   <artifactId>camunda-bpm-jgiven-parent</artifactId>
-  <version>1.21.1</version>
+  <version>1.21.2-SNAPSHOT</version>
   <packaging>pom</packaging>
 
 
