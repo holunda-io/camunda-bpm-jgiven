@@ -35,8 +35,6 @@ object TestProcessEngine {
       configuration.isJobExecutorActivate = false
       configuration.isDbMetricsReporterActivate = false
       configuration.expressionManager = MockExpressionManager()
-      configuration.isTelemetryReporterActivate = false
-      configuration.isInitializeTelemetry = false
     }
 
     /**
