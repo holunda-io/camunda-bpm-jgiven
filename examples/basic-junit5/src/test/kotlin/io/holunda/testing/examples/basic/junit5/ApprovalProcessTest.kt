@@ -2,15 +2,20 @@ package io.holunda.testing.examples.basic.junit5
 
 import com.tngtech.jgiven.annotation.ScenarioState
 import com.tngtech.jgiven.junit5.ScenarioTest
+import io.holunda.camunda.bpm.extension.jgiven.ActivityTrackingExternalTaskWorker
 import io.holunda.testing.examples.basic.ApprovalProcessBean
 import io.holunda.testing.examples.basic.ApprovalProcessBean.Elements
 import io.holunda.testing.examples.basic.ApprovalProcessBean.Expressions
+import io.holunda.testing.examples.basic.ApprovalProcessBean.Expressions.ApprovalDecision.APPROVE
+import io.holunda.testing.examples.basic.ApprovalProcessBean.Expressions.ApprovalDecision.REJECT
+import io.holunda.testing.examples.basic.ApprovalProcessBean.Expressions.TOPIC_APPROVE_REQUEST
+import io.holunda.testing.examples.basic.ApprovalProcessBean.Expressions.TOPIC_INFORM_ABOUT_REJECTION
+import io.holunda.testing.examples.basic.ApprovalProcessBean.Variables.APPROVAL_DECISION
 import io.toolisticon.testing.jgiven.AND
 import io.toolisticon.testing.jgiven.GIVEN
 import io.toolisticon.testing.jgiven.THEN
 import io.toolisticon.testing.jgiven.WHEN
 import org.assertj.core.api.Assertions.assertThat
-import org.camunda.bpm.engine.externaltask.LockedExternalTask
 import org.camunda.bpm.engine.test.Deployment
 import org.camunda.bpm.engine.variable.Variables.putValue
 import org.junit.jupiter.api.Test
@@ -30,6 +35,8 @@ internal class ApprovalProcessTest :
 
   @ScenarioState
   val camunda = extension.processEngine
+
+  private val ppi = ApprovalProcessBean(camunda)
 
   @Test
   fun `should deploy`() {
@@ -70,7 +77,7 @@ internal class ApprovalProcessTest :
       .AND
       .process_does_not_wait_in(Elements.USER_APPROVE_REQUEST)
       .AND
-      .external_task_exists("approve-request")
+      .external_task_exists(TOPIC_APPROVE_REQUEST)
 
   }
 
@@ -82,6 +89,15 @@ internal class ApprovalProcessTest :
     GIVEN
       .process_is_deployed(ApprovalProcessBean.KEY)
       .AND
+      .using_process_instance_starter {
+        ppi.let {
+          it.start(approvalRequestId)
+          it.processInstance
+        }
+      }
+      .AND
+      .using_process_instance_supplier { _ -> ppi }
+      .AND
       .process_is_started_for_request(approvalRequestId)
       .AND
       .approval_strategy_can_be_applied(Expressions.ApprovalStrategy.AUTOMATIC)
@@ -89,37 +105,25 @@ internal class ApprovalProcessTest :
       .process_continues()
 
     WHEN
-      .automatic_approval_returns(Expressions.ApprovalDecision.APPROVE)
+      .automatic_approval_returns(APPROVE)
 
     THEN
-      .process_is_finished()
+      .process_is_finished(Elements.END_APPROVED)
       .AND
-      .process_has_passed(Elements.SERVICE_AUTO_APPROVE, Elements.END_APPROVED)
+      .process_has_passed(Elements.SERVICE_AUTO_APPROVE)
+      .AND
+      .variable_was_set(APPROVAL_DECISION, APPROVE)
 
   }
 
   @Test
   fun `should automatic approve with custom worker`() {
 
-    // this is our custom worker that is called directly. It will track the activities it was called for.
-    class DummyWorker(
-      val workerName: String,
-      val topicName: String,
-      val activities: MutableList<String> = mutableListOf()
-    ) : (LockedExternalTask) -> Unit {
-      override fun invoke(task: LockedExternalTask) {
-        camunda.externalTaskService.complete(
-          task.id,
-          workerName,
-          putValue(ApprovalProcessBean.Variables.APPROVAL_DECISION, Expressions.ApprovalDecision.APPROVE)
-        )
-        activities.add(task.activityId)
-      }
-
-
-    }
-
-    val worker = DummyWorker(workerName = "dummyWorker", topicName = "approve-request")
+    val worker = ActivityTrackingExternalTaskWorker(
+      externalTaskService = camunda.externalTaskService,
+      topicName = TOPIC_APPROVE_REQUEST,
+      variablesToSet = putValue(APPROVAL_DECISION, APPROVE)
+    )
 
     val approvalRequestId = UUID.randomUUID().toString()
 
@@ -168,13 +172,14 @@ internal class ApprovalProcessTest :
       .process_continues()
 
     WHEN
-      .automatic_approval_returns(Expressions.ApprovalDecision.REJECT)
+      .automatic_approval_returns(REJECT)
 
     THEN
-      .process_is_finished()
+      .process_has_passed(Elements.SERVICE_AUTO_APPROVE)
       .AND
-      .process_has_passed(Elements.SERVICE_AUTO_APPROVE, Elements.END_REJECTED)
-
+      .process_waits_in_external_task(Elements.EXTERNAL_INFORM_REJECTION)
+      .AND
+      .external_task_exists(TOPIC_INFORM_ABOUT_REJECTION)
   }
 
   @Test
@@ -199,15 +204,56 @@ internal class ApprovalProcessTest :
 
     WHEN
       .task_is_completed_with_variables(
-        putValue(ApprovalProcessBean.Variables.APPROVAL_DECISION, Expressions.ApprovalDecision.REJECT),
+        putValue(APPROVAL_DECISION, REJECT),
         isAsyncAfter = true
       )
 
     THEN
-      .process_is_finished()
+      .process_has_passed(Elements.USER_APPROVE_REQUEST)
       .AND
-      .process_has_passed(Elements.END_REJECTED)
+      .process_waits_in_external_task(Elements.EXTERNAL_INFORM_REJECTION)
+      .AND
+      .external_task_exists(TOPIC_INFORM_ABOUT_REJECTION)
 
+  }
+
+  @Test
+  fun `should inform about rejection`() {
+    val worker = ActivityTrackingExternalTaskWorker(
+      externalTaskService = camunda.externalTaskService,
+      topicName = TOPIC_INFORM_ABOUT_REJECTION
+    )
+    val approvalRequestId = UUID.randomUUID().toString()
+
+    GIVEN
+      .process_is_deployed(ApprovalProcessBean.KEY)
+      .AND
+      .process_is_started_for_request(approvalRequestId)
+      .AND
+      .approval_strategy_can_be_applied(Expressions.ApprovalStrategy.AUTOMATIC)
+      .AND
+      .process_continues()
+      .AND
+      .automatic_approval_returns(REJECT)
+      .AND
+      .process_has_passed(Elements.SERVICE_AUTO_APPROVE)
+      .AND
+      .process_waits_in_external_task(Elements.EXTERNAL_INFORM_REJECTION)
+      .AND
+      .external_task_exists(TOPIC_INFORM_ABOUT_REJECTION)
+
+    WHEN
+      .external_task_is_completed_by_worker(
+        workerName = worker.workerName,
+        topicName = worker.topicName,
+        isAsyncAfter = true,
+        worker = worker
+      )
+
+    THEN
+      .process_is_finished(Elements.END_REJECTED)
+      .AND
+      .variable_was_set(APPROVAL_DECISION, REJECT)
   }
 
   @Test
@@ -228,7 +274,7 @@ internal class ApprovalProcessTest :
 
     WHEN
       .task_is_completed_with_variables(
-        putValue(ApprovalProcessBean.Variables.APPROVAL_DECISION, Expressions.ApprovalDecision.APPROVE),
+        putValue(APPROVAL_DECISION, APPROVE),
         isAsyncAfter = true
       )
 
