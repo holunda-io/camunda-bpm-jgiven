@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1nzmi6w" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.6.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1nzmi6w" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.20.0">
   <bpmn:process id="approval" name="Approval" isExecutable="true" camunda:historyTimeToLive="1">
     <bpmn:startEvent id="start" name="Approval&#10;started" camunda:asyncAfter="true">
       <bpmn:outgoing>flow1</bpmn:outgoing>
@@ -39,9 +39,9 @@
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${approvalDecision == "APPROVE"}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:endEvent id="end_rejected" name="Request&#10;rejected">
-      <bpmn:incoming>SequenceFlow_1i81jsh</bpmn:incoming>
+      <bpmn:incoming>Flow_0ic9b46</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_1i81jsh" name="REJECT" sourceRef="ExclusiveGateway_0aekkob" targetRef="end_rejected">
+    <bpmn:sequenceFlow id="SequenceFlow_1i81jsh" name="REJECT" sourceRef="ExclusiveGateway_0aekkob" targetRef="external_inform_rejection">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${approvalDecision == "REJECT"}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:exclusiveGateway id="ExclusiveGateway_1uzhki5">
@@ -113,6 +113,23 @@
         <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT5D</bpmn:timeDuration>
       </bpmn:timerEventDefinition>
     </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_0ic9b46" sourceRef="external_inform_rejection" targetRef="end_rejected" />
+    <bpmn:serviceTask id="external_inform_rejection" name="Inform about rejection" camunda:asyncAfter="true" camunda:type="external" camunda:topic="inform-about-rejection">
+      <bpmn:incoming>SequenceFlow_1i81jsh</bpmn:incoming>
+      <bpmn:outgoing>Flow_0ic9b46</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:textAnnotation id="TextAnnotation_0498nfc">
+      <bpmn:text>async after</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_1gpu8gl" associationDirection="None" sourceRef="external_inform_rejection" targetRef="TextAnnotation_0498nfc" />
+    <bpmn:textAnnotation id="TextAnnotation_0swfhc6">
+      <bpmn:text>async after</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_114rxl0" associationDirection="None" sourceRef="user_approve_request" targetRef="TextAnnotation_0swfhc6" />
+    <bpmn:textAnnotation id="TextAnnotation_1dtabd4">
+      <bpmn:text>async after</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_11m9eap" associationDirection="None" sourceRef="user_amend_request" targetRef="TextAnnotation_1dtabd4" />
   </bpmn:process>
   <bpmn:error id="Error_0g5zlsr" name="error_auto_approval_failed" errorCode="automaticApprovalFailed" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
@@ -139,18 +156,6 @@
         <dc:Bounds x="1062" y="304" width="50" height="50" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1027" y="346" width="47" height="27" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="EndEvent_1rvg3im_di" bpmnElement="end_approved">
-        <dc:Bounds x="1214" y="311" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1209" y="354" width="46" height="27" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="EndEvent_0z5tlto_di" bpmnElement="end_rejected">
-        <dc:Bounds x="1214" y="474" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1212" y="517" width="41" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ExclusiveGateway_1uzhki5_di" bpmnElement="ExclusiveGateway_1uzhki5" isMarkerVisible="true">
@@ -186,6 +191,33 @@
       <bpmndi:BPMNShape id="ExclusiveGateway_1i5ac37_di" bpmnElement="ExclusiveGateway_1i5ac37" isMarkerVisible="true">
         <dc:Bounds x="1062" y="59" width="50" height="50" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_0z5tlto_di" bpmnElement="end_rejected">
+        <dc:Bounds x="1352" y="474" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1350" y="517" width="41" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0nty1t1_di" bpmnElement="external_inform_rejection">
+        <dc:Bounds x="1182" y="452" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_1rvg3im_di" bpmnElement="end_approved">
+        <dc:Bounds x="1352" y="311" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1347" y="354" width="46" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_1gpu8gl_di" bpmnElement="Association_1gpu8gl">
+        <di:waypoint x="1282" y="461" />
+        <di:waypoint x="1316" y="440" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_114rxl0_di" bpmnElement="Association_114rxl0">
+        <di:waypoint x="946" y="456" />
+        <di:waypoint x="977" y="432" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_11m9eap_di" bpmnElement="Association_11m9eap">
+        <di:waypoint x="1047" y="185" />
+        <di:waypoint x="1118" y="160" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="BoundaryEvent_0fym2it_di" bpmnElement="timer">
         <dc:Bounds x="999" y="145" width="36" height="36" />
         <bpmndi:BPMNLabel>
@@ -230,17 +262,17 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0jqf4xj_di" bpmnElement="SequenceFlow_0jqf4xj">
         <di:waypoint x="1112" y="329" />
-        <di:waypoint x="1214" y="329" />
+        <di:waypoint x="1352" y="329" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1111" y="308" width="52" height="14" />
+          <dc:Bounds x="1144" y="308" width="54" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_1i81jsh_di" bpmnElement="SequenceFlow_1i81jsh">
         <di:waypoint x="1087" y="354" />
         <di:waypoint x="1087" y="492" />
-        <di:waypoint x="1214" y="492" />
+        <di:waypoint x="1182" y="492" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1091" y="468" width="44" height="14" />
+          <dc:Bounds x="1102" y="468" width="43" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_1p4jixi_di" bpmnElement="SequenceFlow_1p4jixi">
@@ -308,6 +340,22 @@
         <di:waypoint x="1087" y="132" />
         <di:waypoint x="1087" y="109" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ic9b46_di" bpmnElement="Flow_0ic9b46">
+        <di:waypoint x="1282" y="492" />
+        <di:waypoint x="1352" y="492" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_0498nfc_di" bpmnElement="TextAnnotation_0498nfc">
+        <dc:Bounds x="1290" y="410" width="100" height="30" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0swfhc6_di" bpmnElement="TextAnnotation_0swfhc6">
+        <dc:Bounds x="947" y="402" width="100" height="30" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1dtabd4_di" bpmnElement="TextAnnotation_1dtabd4">
+        <dc:Bounds x="1110" y="130" width="100" height="30" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>
