@@ -21,7 +21,7 @@
     <jgiven-kotlin.version>1.3.1.0</jgiven-kotlin.version>
 
     <java.version>17</java.version>
-    <kotlin.version>2.0.20</kotlin.version>
+    <kotlin.version>2.0.21</kotlin.version>
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
     <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
     <maven.compiler.source>${java.version}</maven.compiler.source>
