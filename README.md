@@ -2,7 +2,7 @@
 Camunda specific stages and scenarios for the BDD testing tool JGiven written in Kotlin.
 
 [![stable](https://img.shields.io/badge/lifecycle-STABLE-green.svg)](https://github.com/holisticon#open-source-lifecycle)
-[![Camunda 7.21](https://img.shields.io/badge/Camunda%20Version-7.21-orange.svg)]([https://github.com/holisticon#open-source-lifecycle](https://docs.camunda.org/manual/7.21/))
+[![Camunda 7.22](https://img.shields.io/badge/Camunda%20Version-7.22-orange.svg)]([https://github.com/holisticon#open-source-lifecycle](https://docs.camunda.org/manual/7.22/))
 [![Development braches](https://github.com/holunda-io/camunda-bpm-jgiven/workflows/Development%20braches/badge.svg)](https://github.com/holunda-io/camunda-bpm-jgiven/workflows) 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.holunda.testing/camunda-bpm-jgiven/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.holunda.testing/camunda-bpm-jgiven)
 
@@ -29,7 +29,7 @@ Add the following dependency to your Maven pom:
 <dependency>
   <groupId>io.holunda.testing</groupId>
   <artifactId>camunda-bpm-jgiven</artifactId>
-  <version>1.21.0</version>
+  <version>1.22.0</version>
   <scope>test</scope>
 </dependency>
 ```
