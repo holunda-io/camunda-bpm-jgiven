@@ -29,14 +29,16 @@ object TestProcessEngine {
     private val configuration: ProcessEngineConfigurationImpl
 
     init {
-      configuration = StandaloneInMemProcessEngineConfiguration()
-      configuration.historyLevel = HistoryLevel.HISTORY_LEVEL_FULL
-      configuration.databaseSchemaUpdate = ProcessEngineConfiguration.DB_SCHEMA_UPDATE_TRUE
-      configuration.isJobExecutorActivate = false
-      configuration.isDbMetricsReporterActivate = false
-      configuration.expressionManager = MockExpressionManager()
-      configuration.isTelemetryReporterActivate = false
-      configuration.isInitializeTelemetry = false
+      configuration = StandaloneInMemProcessEngineConfiguration().apply {
+
+        historyLevel = HistoryLevel.HISTORY_LEVEL_FULL
+        databaseSchemaUpdate = ProcessEngineConfiguration.DB_SCHEMA_UPDATE_TRUE
+        isJobExecutorActivate = false
+        isDbMetricsReporterActivate = false
+        expressionManager = MockExpressionManager()
+        isTelemetryReporterActivate = false
+        isInitializeTelemetry = false
+      }
     }
 
     /**
