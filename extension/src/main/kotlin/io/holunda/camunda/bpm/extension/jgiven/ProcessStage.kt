@@ -19,6 +19,7 @@ import org.camunda.bpm.engine.variable.Variables.createVariables
 import java.time.Period
 import java.time.temporal.ChronoUnit
 import java.util.*
+import java.util.function.Function
 import java.util.function.Supplier
 
 /**
@@ -71,6 +72,61 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
   lateinit var processInstanceSupplier: PROCESS_BEAN
 
   /**
+   * Process instance supplier builder.
+   */
+  @ScenarioState
+  lateinit var processInstanceSupplierBuilder: Function<ProcessInstance, PROCESS_BEAN>
+
+  /**
+   * Starts process instance.
+   */
+  @ScenarioState
+  lateinit var processInstanceStarter: Supplier<ProcessInstance>
+
+  /**
+   * Flag controlling if the process instance should be automatically re-loaded after job execution.
+   */
+  var updateInstanceAutomatically: Boolean = false
+
+  /**
+   * Creates the stage using process instance supplier builder: a function that is able to construct process bean out of process instance.
+   * @param processInstanceSupplierBuilder builder function.
+   */
+  @As("using process instance supplier")
+  fun using_process_instance_supplier(processInstanceSupplierBuilder: Function<ProcessInstance, PROCESS_BEAN>): SELF = step {
+    this.processInstanceSupplierBuilder = processInstanceSupplierBuilder
+  }
+
+  /**
+   * Creates the stage using process instance starter.
+   * @param processInstanceStarter starter for the process instance.
+   */
+  @As("using process instance starter")
+  fun using_process_instance_starter(processInstanceStarter: Supplier<ProcessInstance>): SELF = step {
+    this.processInstanceStarter = processInstanceStarter
+  }
+
+  /**
+   * Process is started using the process instance starter.
+   */
+  @As("process_is_started")
+  fun process_is_started() : SELF = step {
+    assertProcessInstanceStarter()
+    assertProcessInstanceSupplierBuilder()
+    val instance = this.processInstanceStarter.get()
+    assertThat(instance).isStarted
+    processInstanceSupplier = processInstanceSupplierBuilder.apply(instance)
+  }
+
+  /**
+   * Fluent builder to update instance rebuilding the process instance supplier each time.
+   * @param flag if true, the process instance supplier will be constructed each time using the process instance supplier builder.
+   */
+  fun updating_instance_automatically(flag: Boolean): SELF = step {
+    this.updateInstanceAutomatically = flag
+  }
+
+  /**
    * Checks if the process instance is waiting in a activity with specified id.
    * @param activityId definition id.
    * @return fluent stage.
@@ -78,6 +134,21 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
   @As("process waits in $")
   fun process_waits_in(@Quoted activityId: String): SELF = step {
     assertThat(processInstanceSupplier.get()).isWaitingAt(activityId)
+  }
+
+  /**
+   * Asserts that the process waits in external task.
+   * @param activityId activity id of the external task.
+   * @return fluent stage.
+   */
+  @As("process waits in external task \$activityId")
+  fun process_waits_in_external_task(@Quoted activityId: String): SELF = step {
+    val externalTasks = camunda
+      .externalTaskService
+      .createExternalTaskQuery()
+      .list()
+      .filter { task -> task.activityId == activityId && task.processInstanceId == processInstanceSupplier.get().processInstanceId }
+    assertThat(externalTasks).isNotEmpty
   }
 
   /**
@@ -139,8 +210,8 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
    * @param activityId activities the execution is waiting at.
    * @return fluent stage.
    */
-  @As("process continues")
-  fun process_continues(vararg activityId: String) = job_is_executed(*activityId)
+  @As("process continues with activities $")
+  fun process_continues(@QuotedVarargs vararg activityId: String) = job_is_executed(*activityId)
 
 
   /**
@@ -165,6 +236,17 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
    */
   fun process_is_finished(): SELF = step {
     assertThat(processInstanceSupplier.get()).isEnded
+  }
+
+  /**
+   * Asserts that the process is finished in specified end event.
+   * @param activityId id of the end event.
+   * @return fluent stage.
+   */
+  @NestedSteps
+  fun process_is_finished(@Quoted activityId: String): SELF = step {
+    process_is_finished()
+    process_has_passed(activityId)
   }
 
   /**
@@ -217,7 +299,7 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
   }
 
   /**
-   * Asserts the task task has a follow-up date
+   * Asserts the task has a follow-up date
    * @param followUpDatePeriod period calculated from creation.
    * @return fluent stage.
    */
@@ -304,6 +386,22 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
   }
 
   /**
+   * Asserts that variable was set on a historic instance.
+   * @param variableName name of the variable.
+   * @param value value of the variable.
+   * @return fluent stage.
+   */
+  @As("variable \$variableName was set to \$value")
+  fun variable_was_set(@Quoted variableName: String, @Quoted value: Any): SELF = step {
+    val historicVariables = camunda.historyService.createHistoricVariableInstanceQuery().list()
+    assertThat(historicVariables.any { variable ->
+      variable.processInstanceId == processInstanceSupplier.get().processInstanceId
+        && variable.name == variableName
+        && variable.value == value
+    }).`as`("Could not find historic variable $variableName").isTrue()
+  }
+
+  /**
    * Asserts that variable is not set.
    * @param variableName name of the variable.
    * @return fluent stage.
@@ -360,6 +458,29 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
   }
 
   /**
+   * Completes a task with variables and continues if the task is marked as async-after.
+   * @param variables optional map with variables
+   * @param isAsyncAfter if <code>true</code> expects that the task is marked as async-after and continues the execution
+   * after completion. Defaults to <code>false</code>.
+   * @return fluent stage.
+   */
+  @As("task $ is completed with variables $")
+  fun task_is_completed_with_variables(
+    @Quoted taskDefinitionKey: String,
+    @VariableMapFormat variables: VariableMap = createVariables(),
+    @Hidden isAsyncAfter: Boolean = false
+  ): SELF = step {
+    assertThat(task()).hasDefinitionKey(taskDefinitionKey)
+    taskService().complete(task().id, variables)
+    if (isAsyncAfter) {
+      assertThat(processInstanceSupplier.get())
+        .`as`("Expecting the task $taskDefinitionKey to be marked as async after and continue on complete.")
+        .isWaitingAt(taskDefinitionKey)
+      job_is_executed(taskDefinitionKey)
+    }
+  }
+
+  /**
    * No op.
    * @return fluent stage.
    */
@@ -375,6 +496,7 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
   fun job_is_executed(): SELF = step {
     assertThat(processInstanceSupplier.get()).isNotNull
     execute(job())
+    handleAutomaticInstanceUpdate()
   }
 
   /**
@@ -382,14 +504,16 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
    * @param activityId id of the activity the job is waiting in.
    * @return fluent stage.
    */
-  fun job_is_executed(vararg activityId: String) = step {
+  fun job_is_executed(@QuotedVarargs vararg activityId: String) = step {
     require(activityId.isNotEmpty()) { "At least one activity id must be provided" }
     activityId.map {
       val job = job(it)
       assertThat(job).`as`("Expecting the process to be waiting in activity '$it', but it was not.").isNotNull
       execute(job)
+      handleAutomaticInstanceUpdate()
     }
   }
+
 
   /**
    * Asserts that the instance is waiting for the timer to be executed on the expected time.
@@ -456,16 +580,6 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
     assertThat(externalTasks).isNotEmpty
   }
 
-
-  /**
-   * Completes external task.
-   *
-   * @param topicName name of the topic.
-   * @param workerName optional, defaults to `test-worker`
-   * @param variables variables to set on completion, optional, defaults to empty map.
-   * @param isAsyncAfter executes the async job after completion, optional, defaults to `false`.
-   * @return fluent stage.
-   */
   private fun externalTaskIsCompleted(
     topicName: String,
     workerName: String = "test-worker",
@@ -571,5 +685,29 @@ class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Suppl
     variables: VariableMap
   ): (LockedExternalTask) -> Unit = {
     externalTaskService.complete(it.id, workerName, variables)
+  }
+
+  internal fun handleAutomaticInstanceUpdate() {
+    if (this.updateInstanceAutomatically) {
+      assertProcessInstanceSupplierBuilder()
+      assertThat(processInstanceSupplier.get()).isNotNull
+      val instances = camunda.runtimeService.createProcessInstanceQuery().active()
+        .processInstanceId(processInstanceSupplier.get().processInstanceId).list()
+      if (instances.isNotEmpty()) {
+        this.processInstanceSupplier = processInstanceSupplierBuilder.apply(instances.first())
+      }
+    }
+  }
+
+  internal fun assertProcessInstanceSupplierBuilder() {
+    assertThat(this::processInstanceSupplierBuilder.isInitialized)
+      .`as`("Process instance supplier builder is not initialized. Please pass the initialization function using ${this::using_process_instance_supplier.name} step.")
+      .isTrue()
+  }
+
+  internal fun assertProcessInstanceStarter() {
+    assertThat(this::processInstanceStarter.isInitialized)
+      .`as`("Process instance starter is not initialized. Please pass the initialization function using ${this::using_process_instance_starter.name} step.")
+      .isTrue()
   }
 }

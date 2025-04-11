@@ -30,14 +30,11 @@ object TestProcessEngine {
 
     init {
       configuration = StandaloneInMemProcessEngineConfiguration().apply {
-
         historyLevel = HistoryLevel.HISTORY_LEVEL_FULL
         databaseSchemaUpdate = ProcessEngineConfiguration.DB_SCHEMA_UPDATE_TRUE
         isJobExecutorActivate = false
         isDbMetricsReporterActivate = false
         expressionManager = MockExpressionManager()
-        isTelemetryReporterActivate = false
-        isInitializeTelemetry = false
       }
     }
 
