@@ -23,39 +23,11 @@ import java.util.function.Function
 import java.util.function.Supplier
 
 /**
- * Alias for the when
- */
-@Deprecated(message = "Please use JGiven-Kotlin instead")
-fun <G, W, T> ScenarioTestBase<G, W, T>.whenever() = `when`()
-
-/**
- * Alias for the when
- */
-@Deprecated(message = "Please use JGiven-Kotlin instead")
-fun <G, W, T> ScenarioTestBase<G, W, T>.WHEN() = `when`()
-
-/**
- * Alias for the given
- */
-@Deprecated(message = "Please use JGiven-Kotlin instead")
-fun <G, W, T> ScenarioTestBase<G, W, T>.GIVEN() = given()
-
-/**
- * Alias for the then
- */
-@Deprecated(message = "Please use JGiven-Kotlin instead")
-fun <G, W, T> ScenarioTestBase<G, W, T>.THEN() = then()
-
-/**
- * Annotation to mark jgiven process stages in order to make them open by all-open compiler plugin.
- */
-annotation class JGivenProcessStage
-
-/**
  * Process stage contains some basic methods to operate with process engine.
  * @param <SELF> sub-type of the ProcessStage. Will be returned from <code>self()</code> to maintain fluent API.
  */
 @JGivenProcessStage
+@Suppress("FunctionName")
 class ProcessStage<SELF : ProcessStage<SELF, PROCESS_BEAN>, PROCESS_BEAN : Supplier<ProcessInstance>> : Stage<SELF>() {
 
 

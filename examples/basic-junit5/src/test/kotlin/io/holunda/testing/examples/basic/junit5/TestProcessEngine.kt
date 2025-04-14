@@ -26,16 +26,12 @@ object TestProcessEngine {
    * Creates the builder.
    */
   class Builder internal constructor() {
-    private val configuration: ProcessEngineConfigurationImpl
-
-    init {
-      configuration = StandaloneInMemProcessEngineConfiguration().apply {
-        historyLevel = HistoryLevel.HISTORY_LEVEL_FULL
-        databaseSchemaUpdate = ProcessEngineConfiguration.DB_SCHEMA_UPDATE_TRUE
-        isJobExecutorActivate = false
-        isDbMetricsReporterActivate = false
-        expressionManager = MockExpressionManager()
-      }
+    private val configuration: ProcessEngineConfigurationImpl = StandaloneInMemProcessEngineConfiguration().apply {
+      historyLevel = HistoryLevel.HISTORY_LEVEL_FULL
+      databaseSchemaUpdate = ProcessEngineConfiguration.DB_SCHEMA_UPDATE_TRUE
+      isJobExecutorActivate = false
+      isDbMetricsReporterActivate = false
+      expressionManager = MockExpressionManager()
     }
 
     /**
