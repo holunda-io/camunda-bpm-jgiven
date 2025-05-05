@@ -15,7 +15,7 @@
   <properties>
     <spring-boot.version>3.4.5</spring-boot.version>
     <camunda-process-test-coverage.version>2.8.1</camunda-process-test-coverage.version>
-    <camunda-platform-7-mockito.version>7.23.0</camunda-platform-7-mockito.version>
+    <camunda-platform-7-mockito.version>7.23.1</camunda-platform-7-mockito.version>
     <junit.version>4.13.2</junit.version>
   </properties>
 
