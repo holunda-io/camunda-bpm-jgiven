@@ -5,8 +5,14 @@ Camunda specific stages and scenarios for the BDD testing tool JGiven written in
 [![Camunda 7.22](https://img.shields.io/badge/Camunda%20Version-7.22-orange.svg)]([https://github.com/holisticon#open-source-lifecycle](https://docs.camunda.org/manual/7.22/))
 [![Development braches](https://github.com/holunda-io/camunda-bpm-jgiven/workflows/Development%20braches/badge.svg)](https://github.com/holunda-io/camunda-bpm-jgiven/workflows) 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.holunda.testing/camunda-bpm-jgiven/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.holunda.testing/camunda-bpm-jgiven)
-
 [![Project Stats](https://www.openhub.net/p/camunda-bpm-jgiven/widgets/project_thin_badge.gif)](https://www.openhub.net/p/camunda-bpm-jgiven)
+
+
+# Relocation
+
+This project is **relocated** to https://github.com/holunda-io/c7 and **will be developed** further there.
+Last release produced from this location was **2025.05.1**
+This repository will be archived.
 
 ## Motivation
 
